@@ -1,0 +1,1739 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>गिरवी बही</title>
+<meta name="theme-color" content="#9E1B22">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="गिरवी बही">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FBFAF7;--surface:#FFFFFF;--ink:#1E1B26;--muted:#6B6675;--line:#E6E2DA;
+  --bahi:#9E1B22;--bahi-ink:#FFF6EC;--gold:#B8862B;--ok:#2F7D4F;--warn:#B45309;--danger:#B42318;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#141218;--surface:#1D1A22;--ink:#EDEAF2;--muted:#A39DAE;--line:#2E2A35;
+    --bahi:#8E1C22;--bahi-ink:#FFF1E2;--gold:#D9A845;--ok:#4CAF7A;--warn:#E0912F;--danger:#F0645A;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#141218;--surface:#1D1A22;--ink:#EDEAF2;--muted:#A39DAE;--line:#2E2A35;
+  --bahi:#8E1C22;--bahi-ink:#FFF1E2;--gold:#D9A845;--ok:#4CAF7A;--warn:#E0912F;--danger:#F0645A;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Mukta",system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.45}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bahi)}
+.num{font-variant-numeric:tabular-nums}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bahi);color:var(--bahi-ink);border-bottom:3px solid var(--gold)}
+.hbar{max-width:640px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.hbar h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.2px;flex:1}
+.hbar small{display:block;font-size:13px;font-weight:400;opacity:.85}
+.hbtn{background:transparent;border:1px solid rgba(255,246,236,.45);color:var(--bahi-ink);border-radius:8px;padding:6px 12px;font:inherit;font-size:15px;cursor:pointer}
+main{max-width:640px;margin:0 auto;padding:16px 16px 96px}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:16px}
+.summary div{background:var(--surface);padding:10px 12px}
+.summary b{display:block;font-size:19px}
+.summary span{font-size:13px;color:var(--muted)}
+.tabs{display:flex;gap:6px;margin:0 0 12px;overflow-x:auto}
+.tab{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font:inherit;font-size:15px;cursor:pointer;white-space:nowrap}
+.tab[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%}
+input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--gold);outline-offset:1px}
+.search{margin-bottom:12px}
+.row{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;padding:10px 12px;margin-bottom:8px;color:var(--ink);font:inherit;cursor:pointer}
+.row.closed{border-left-color:var(--line);opacity:.75}
+.row.risk{border-left-color:var(--danger)}
+.rtop{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.rtop strong{font-size:18px}
+.rsub{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:14px}
+.due{font-weight:700;font-size:18px}
+.flag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;margin-left:6px;vertical-align:2px;border:1px solid currentColor}
+.flag.warn{color:var(--warn)}.flag.danger{color:var(--danger)}.flag.ok{color:var(--ok)}
+.empty{text-align:center;color:var(--muted);padding:40px 12px}
+.fab{position:fixed;right:max(16px,calc(50% - 304px));bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--bahi);color:var(--bahi-ink);border:2px solid var(--gold);border-radius:999px;padding:12px 20px;font:inherit;font-weight:600;font-size:17px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+.card h2{margin:0 0 8px;font-size:17px;font-weight:600}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:15px}
+.kv dt{color:var(--muted)}.kv dd{margin:0;text-align:right}
+.bigdue{font-size:32px;font-weight:700;line-height:1.1}
+.muted{color:var(--muted);font-size:14px}
+label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 10px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.btn{font:inherit;font-size:16px;font-weight:600;border-radius:10px;padding:10px 16px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink);text-decoration:none;display:inline-block}
+.btn.primary{background:var(--bahi);color:var(--bahi-ink);border-color:var(--bahi)}
+.btn.wa{background:#1F8F4E;color:#fff;border-color:#1F8F4E}
+.btn.danger{color:var(--danger);border-color:var(--danger);background:transparent}
+.hint{font-size:14px;margin-top:6px}
+.hint.warn{color:var(--warn)}.hint.danger{color:var(--danger)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+td,th{padding:6px 4px;border-bottom:1px solid var(--line);text-align:left}
+th{color:var(--muted);font-weight:500;font-size:13px}
+td.r,th.r{text-align:right}
+.back{background:none;border:none;color:inherit;font:inherit;font-size:22px;cursor:pointer;padding:0 6px 0 0}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:15px;z-index:20}
+.sync{font-size:12px;opacity:.8}
+@media (prefers-reduced-motion:no-preference){.row,.btn{transition:transform .08s}.row:active,.btn:active{transform:scale(.99)}}
+.fld{display:flex;gap:6px;align-items:stretch}
+.fld>input,.fld>textarea{flex:1;min-width:0}
+.mic{flex:none;width:44px;border:1px solid var(--line);background:var(--surface);border-radius:10px;font-size:18px;cursor:pointer;color:var(--ink)}
+.mic.on{background:var(--bahi);border-color:var(--gold)}
+@media (prefers-reduced-motion:no-preference){.mic.on{animation:pulse 1s ease-in-out infinite}@keyframes pulse{50%{box-shadow:0 0 0 6px rgba(184,134,43,.25)}}}
+.search .fld input{margin:0}
+.rates{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;font-size:14px;color:var(--muted);margin:0 0 12px}
+.rates.stale{color:var(--warn)}
+.rates b{font-weight:600;width:100%}
+.linkbtn{background:none;border:none;padding:0;font:inherit;font-size:14px;color:var(--bahi);text-decoration:underline;cursor:pointer}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .linkbtn{color:var(--gold)}}
+:root[data-theme="dark"] .linkbtn{color:var(--gold)}
+.itembox{min-width:0;border:1px solid var(--line);border-radius:10px;padding:4px 12px 12px;margin:14px 0 0}
+.itembox legend{font-weight:600;padding:0 6px}
+.tw{overflow-x:auto}
+.home{background:none;border:none;padding:0;color:inherit;font:inherit;cursor:pointer;text-align:left}
+.pfx{flex:1;min-width:0;display:flex;align-items:stretch;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.pfx span{padding:10px 0 10px 12px;color:var(--muted)}
+.pfx input{border:none;border-radius:0;padding-left:6px;min-width:0}
+.pfx:focus-within{outline:2px solid var(--gold);outline-offset:1px}
+.pfx input:focus{outline:none}
+.cam{cursor:pointer;margin:0}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.th{position:relative;display:inline-block}
+.th img{width:84px;height:84px;object-fit:cover;border-radius:8px;border:1px solid var(--line);cursor:zoom-in;background:#fff}
+.th button{position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:16px;line-height:1;cursor:pointer}
+.sigpad{display:block;width:100%;height:170px;border:1px dashed var(--muted);border-radius:10px;background:#fff;touch-action:none}
+.lb{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.lb img{max-width:100%;max-height:80%;border-radius:8px;background:#fff}
+.lock{position:fixed;inset:0;z-index:25;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px));overflow-y:auto}
+.lock[hidden]{display:none}
+.lockbox{width:100%;max-width:340px;text-align:center}
+.lockname{font-weight:700;font-size:22px;color:var(--bahi);border-bottom:3px solid var(--gold);display:inline-block;padding-bottom:2px;margin-bottom:8px}
+.lockbox h2{font-size:19px;font-weight:600;margin:8px 0 14px}
+.dots{display:flex;justify-content:center;gap:14px;margin-bottom:4px}
+.dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink)}
+.dot.on{background:var(--ink)}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:10px 0 14px}
+.key{font:inherit;font-size:26px;font-weight:600;height:62px;border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.key:active{background:var(--line)}
+.code{font-size:26px;font-weight:700;letter-spacing:2px;background:var(--surface);border:2px dashed var(--gold);border-radius:12px;padding:12px;margin:8px 0}
+.chk{display:flex;gap:8px;align-items:center;color:var(--ink);font-size:16px}
+.chk input{width:auto}
+.mark{color:var(--danger);font-size:.8em}
+.seg{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:0 0 14px;background:var(--surface)}
+.seg button{font:inherit;font-size:17px;font-weight:600;padding:10px;border:none;background:transparent;color:var(--muted);cursor:pointer}
+.seg button[aria-selected="true"]{background:var(--bahi);color:var(--bahi-ink)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding:6px 0 2px;scrollbar-width:none}
+.chip{flex:none;font:inherit;font-size:14px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}
+.bargain{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:14px 0 0}
+.bargain:empty{display:none}
+.bargain div{display:flex;justify-content:space-between;align-items:baseline;gap:8px;background:var(--surface);padding:10px 12px}
+.bargain span{color:var(--muted);font-size:15px}
+.bargain b{font-size:19px}
+.bargain b.ok{color:var(--ok)}
+.bargain .limit{background:var(--bahi);}
+.bargain .limit span,.bargain .limit b{color:var(--bahi-ink)}
+.bargain .limit b{font-size:24px}
+dd.neg{color:var(--danger)}
+.bargain .big b{font-size:22px}
+.billrow{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.billrow:last-child{border-bottom:none}
+.billrow .r{text-align:right}
+.invoice{background:#fff;color:#111;border:1px solid #ddd;border-radius:10px;padding:16px;font-size:14px}
+.invoice table{font-size:13px}
+@media print{.invoice .tw{overflow:visible}.invoice table{font-size:11px}}
+.invoice td,.invoice th{border-color:#ddd;color:#111}
+.invoice .kv dt{color:#555}
+.invoice .muted{color:#555}
+.ih{display:flex;justify-content:space-between;gap:12px;border-bottom:2px solid #9E1B22;padding-bottom:8px;margin-bottom:8px}
+.ih h2{margin:0;font-size:20px;color:#9E1B22}
+.ih .r{text-align:right}
+.if{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:36px;font-size:13px}
+.sigline{border-top:1px solid #111;padding-top:4px}
+@media print{
+  header,.fab,.noprint,#toast,#lock,body::before{display:none!important}
+  :root{padding:0}
+  body{background:#fff}
+  main{max-width:none;padding:0}
+  .invoice{border:none;padding:0}
+}
+</style>
+</head>
+<body>
+<header><div class="hbar" id="hbar"></div></header>
+<main id="app"><p class="empty">…</p></main>
+<div id="toast" class="toast" hidden></div>
+<div id="lock" class="lock" hidden></div>
+
+<script>
+// ---------- Language ----------
+const T = {
+  en: {
+    appName: "Girvi Bahi", syncCloud: "Saved to your account", syncLocal: "Saved on this device only", settings: "Settings", back: "Back", loading: "Opening the bahi…",
+    active: "Active girvi", out: "Money out", intToday: "Interest due today",
+    searchPh: "Search name, phone, village, item, no.", tabActive: "Active", tabAttn: n => `Needs attention (${n})`, tabClosed: "Closed",
+    empty: "No girvi yet. Tap “New girvi” to write the first entry.", nomatch: "Nothing matches here.", newBtn: "+ New girvi",
+    no: "No.", since: d => "since " + d,
+    fClosed: "Closed", fDanger: "Due near item value", fWatch: "Watch value", fMonths: n => n + " months",
+    girviNo: n => "Girvi no. " + n, settledOn: d => "Settled on " + d,
+    toRedeem: (p, i) => `To redeem today — ${p} principal + ${i} interest`,
+    ltvLine: (pct, v) => `That is ${pct}% of the item’s value today (${v}).`,
+    redeem: "Redeem & close", part: "Part payment", waRem: "WhatsApp reminder",
+    item: "Item", desc: "Description", metal: "Metal", gold: "Gold", silver: "Silver", weights: "Gross / net weight", valStart: "Value when pledged", valNow: "Value today",
+    loan: "Loan", givenOn: "Given on", amtGiven: "Amount given", interest: "Interest", perMonth: r => r + "% per month", counting: "Counting",
+    runningLabel: "Running for", runningFor: (m, d) => `${m} months ${d} days`, intRecv: "Interest received", payments: "Payments", date: "Date", note: "Note", amount: "Amount", noPays: "No payments yet.",
+    resend: "Send receipt again", edit: "Edit entry", del: "Delete",
+    delConfirm: (no, name) => `Delete girvi no. ${no} for ${name}? Use this only for a wrong entry — it cannot be undone.`, deleted: "Entry deleted",
+    mFull: "Part month = full month", mHalf: "Up to 15 days = half month", mDay: "Per day (30-day month)",
+    redeemTitle: n => "Redeem girvi no. " + n, partTitle: n => "Part payment — girvi no. " + n,
+    amtRecv: "Amount received (₹)", noteOpt: "Note (optional)", notePh: "e.g. paid by son", closeBtn: "Close girvi", savePay: "Save payment", cancel: "Cancel",
+    dueOn: (d, p, i) => `Due on this date: ${d} (${p} + ${i} interest).`, short: x => ` ${x} short — closing will waive it.`,
+    split: (a, b, c) => `${a} clears interest, ${b} reduces the loan. Left after this: ${c}.`, intOn: i => `Interest due on this date: ${i}.`,
+    pickDate: "Pick a date on or after the loan date", enterAmt: "Enter the amount received", coversAll: "That covers everything — use Redeem & close instead",
+    closedToast: "Girvi closed", paySaved: "Payment saved", noteRedeemed: "Redeemed", notePart: "Part payment",
+    askReceipt: "Send the customer a receipt?", sendWa: "Send on WhatsApp",
+    newTitle: "New girvi", editTitle: n => "Edit girvi no. " + n, custName: "Customer name *", mobile: "Mobile", village: "Village",
+    itemReq: "Item *", itemPh: "e.g. 2 gold bangles", purity: "Purity", gross: "Gross weight (g)", net: "Net weight (g) *",
+    loanGiven: "Loan given (₹) *", ratePM: "Interest % / month *", notes: "Notes", notesPh: "ID seen, marks on item, who brought it",
+    saveNew: "Save girvi", saveChanges: "Save changes", netHint: "Enter the weight to see the item’s value.",
+    valHint: v => `Item value at today’s rate: ${v}.`, loanPct: p => ` Loan is ${p}% of it.`, above75: " Above 75% — little cushion if the price drops or interest piles up.",
+    enterName: "Enter the customer name", describeItem: "Describe the item", enterNet: "Enter the net weight", enterLoan: "Enter the loan amount", enterRate: "Enter the interest rate",
+    savedNo: n => `Girvi no. ${n} saved`, changesSaved: "Changes saved",
+    shop: "Shop", shopName: "Shop name (shown on receipts)", rates: "Today’s rates", ratesNote: "Use the rate you would actually buy at in your own market. Item values and warnings use these.",
+    gold24: "Gold 24K (₹ per 10 g)", silverRate: "Silver 999 (₹ per kg)", defaults: "Defaults for new girvi", flagAfter: "Flag after (months)",
+    language: "Language", appLang: "App language", receiptLang: "Receipt & reminder language", saveSettings: "Save settings", settingsSaved: "Settings saved",
+    backup: "Backup", backupCloud: "Entries are saved to your Claude account. Keep a file backup too, once a week.",
+    backupLocal: "Entries are saved only in this browser. If it is cleared, they are gone — export a backup often.",
+    export: "Export backup", restore: "Restore from file", backupSaved: "Backup saved", backupNotSaved: "Backup not saved",
+    backupCopied: "Backup copied — paste it into a note or WhatsApp to yourself", exportNA: "Export isn’t available in this view",
+    restoreConfirm: n => `Restore ${n} entries from this file? Entries with the same id are replaced; others stay.`, restored: "Backup restored", badFile: "That file is not a Girvi Bahi backup",
+    storageFull: "Storage full — export a backup", notSaved: "Not saved to cloud — check connection",
+    speak: "Speak", listening: "Listening…", micBlocked: "Microphone not allowed here — use the mic on your keyboard", noSpeech: "Didn’t catch that — try again", noNumber: "Didn’t hear a number — try again",
+    voiceNote: "Tap 🎤 next to a field and speak. Speak in the app language.",
+    purityPct: "Purity %", addItem: "+ Add another item", removeItem: "Remove item", itemN: n => "Item " + n, items: "Items",
+    totalNow: "Total value today", value: "Value",
+    rateStrip: (g, sv, d) => `Gold 24K ${g} / 10 g · Silver 999 ${sv} / kg · rates of ${d}`, staleRates: "These rates are old — update them before giving a new loan.", updateRates: "Update rates",
+    itemIncomplete: n => `Item ${n}: fill in description and weight`,
+    weight: "Weight on kata (g) *", phoneBad: "Mobile number must be 10 digits, starting with 6–9", home: "Home",
+    photos: "Photos", itemPhoto: "📷 Item photo", custPhoto: "📷 Customer photo", thumbPhoto: "📷 Photo of thumb impression",
+    signTitle: "Customer signature or thumb impression", signHelp: "Customer signs with a finger in the box — or presses an inked thumb on paper and you take its photo.",
+    clearSign: "Clear", returnSignTitle: "Signature or thumb on getting items back", savingPhoto: "Saving photo…", photoFail: "Photo not saved — try again",
+    removePhoto: "Remove photo", itemPhotos: "Items", custPhotoL: "Customer", signL: "Signature / thumb at pledge", returnSignL: "Signature / thumb on return", close: "Close",
+    stillSaving: "Wait — a photo is still saving",
+    lockTitle: "Enter PIN", setPinTitle: "Set a 4-digit PIN", confirmPin: "Enter the same PIN again", pinMismatch: "PINs did not match — set it again",
+    wrongPin: "Wrong PIN", waitPin: s => `Too many tries — wait ${s} seconds`, forgotPin: "Forgot PIN?", currentPin: "Enter current PIN",
+    recoveryTitle: "Write this recovery code in your register", recoveryHelp: "If you forget the PIN, only this code opens the bahi. Keep it on paper, away from the phone.",
+    wroteIt: "I have written it down", enterRecovery: "Enter the recovery code from your register", recoverBtn: "Open with code", badRecovery: "That code is not right",
+    lockNow: "Lock", setPinCard: "Set a PIN so no one else can open the bahi if the phone is lost or snatched.", setPinBtn: "Set PIN", later: "Later",
+    security: "Security", changePin: "Change PIN", autoLock: "Lock automatically", immediately: "As soon as the app is left", mins: n => `After ${n} minutes`,
+    pinSet: "PIN set", pinChanged: "PIN changed", cancelPin: "Cancel",
+    privateCard: "Private", caution: "Be careful with this customer", privateNote: "Private note — saved locked, only readable after PIN",
+    privatePh: "Anything you want to remember about this customer", needPinForPrivate: "Set a PIN first — private notes are locked with it.",
+    showPrivate: "Show", hidePrivate: "Hide", cautionEarlier: "⚑ An earlier girvi of this customer is marked careful.", noPrivateText: "No note written.",
+    showAmounts: "Show amounts", hideAmounts: "Hide amounts", pinOnNote: "Turn on: Settings → Security",
+    welcome: "Welcome", welcomeText: "Your girvi register on this phone. It works without internet. Everything is locked with a PIN.",
+    startNew: "Set PIN and start", restoreOld: "Bring back a backup from the old phone",
+    shopCode: "Shop code — write it in the register", helperCode: "Helper code — give it to the person who set up this app",
+    codesHelp: "Forgot the PIN? Either code opens the bahi. Keep them on paper, never on this phone.",
+    backupPin: "Enter the PIN of the old phone", useCodeInstead: "Use a recovery code instead", restoreFrom: "Enter a recovery code of the old phone",
+    replaceAll: "This replaces everything on this phone with the backup. Continue?",
+    backupNote: "Everything stays on this phone, locked with your PIN. Back up every week: send the file to your Google Drive, Gmail or WhatsApp. The file is locked too — it opens only with your PIN or a recovery code.",
+    backupDue: d => d ? `Last backup: ${d}. If the phone is lost, only a backup saves the bahi.` : "No backup yet. If the phone is lost, only a backup saves the bahi.",
+    backupNow: "Back up now", syncPhone: "Saved on this phone",
+    secGirvi: "Girvi", secBuy: "Buying", newBuy: "+ New purchase", buyTitle: "New purchase", buyNo: n => "Purchase no. " + n,
+    buyMonthCount: "Bought this month", buyMonthPaid: "Paid this month", buyTotal: "All purchases", buyEmpty: "No purchases yet. Tap “New purchase”.",
+    buySearchPh: "Search name, phone, item, no.",
+    marketVal: "Market value of the metal", startOffer: "Start your offer at", maxPay: "Do not pay above",
+    agreed: "Price agreed (₹) *", agreedOk: "Good — within your margin.", agreedWarn: "Above your offer — the margin is getting thin.",
+    agreedBad: x => `${x} above your limit. Don't go this high.`, ownership: "Customer says these items are their own and sold by choice",
+    needOwnership: "Tick the ownership line before saving", enterPaid: "Enter the price agreed", saveBuy: "Save purchase",
+    paidL: "Paid", valueThen: "Value that day", marginL: "Your margin", buySaved: n => `Purchase no. ${n} saved`,
+    payMode: "Paid by", cash: "Cash", upi: "UPI / bank", cashWarn: "More than ₹10,000 in cash to one person in a day can cause tax trouble — pay by UPI or bank, or ask your CA.",
+    buyMargins: "Buying margins", offerG: "Gold: start offer (% below value)", minG: "Gold: keep at least (% below value)",
+    offerS: "Silver: start offer (% below value)", minS: "Silver: keep at least (% below value)",
+
+    secSale: "Selling", newSale: "+ New bill", saleTitle: "New bill", billNo: n => "Bill no. " + n,
+    saleMonthCount: "Bills this month", saleMonthAmt: "Sales this month", saleMonthGst: "GST this month", saleEmpty: "No bills yet. Tap “New bill”.",
+    makingPct: "Making %", otherAmt: "Stone / other ₹", rateUsed: "Rate", metalVal: "Metal", makingL: "Making", amountL: "Amount",
+    newItems: "New items", oldItems: "Old gold / silver given back", addOld: "+ Add old item", noOld: "Nothing given back",
+    oldValue: "Value of old items", oldAgreed: "Old items — agreed value (₹)",
+    marketPrice: "Market price", discount: "Discount (₹)", discPct: p => `${p}% off`, discTooHigh: m => `More than your rule of ${m}% — same rules for every customer.`,
+    taxable: "Taxable value", gstL: r => `GST ${r}%`, cgst: r => `CGST ${r}%`, sgst: r => `SGST ${r}%`, billTotal: "Bill total",
+    lessOld: "Less: old items", roundOff: "Round off", toPay: "Customer pays", toReturn: "Shop pays customer",
+    splitBills: "Separate bill for each item (for gifts to different people)", panL: "PAN (needed for bills of ₹2 lakh or more)",
+    needPan: "PAN is needed for a bill of ₹2 lakh or more", cashBan: "Cash of ₹2 lakh or more cannot be accepted — take it by UPI or bank.",
+    saveSale: "Save bill", saleSaved: n => `Bill ${n} saved`, bills: "Bills", viewBill: "View / print", printBill: "🖨 Print / save PDF",
+    taxInvoice: "TAX INVOICE", billOfSupply: "BILL OF SUPPLY", estimate: "BILL", hsn: "HSN", custL: "Customer", gstinL: "GSTIN",
+    signatory: "For the shop — signature", thanks: "Thank you. Please visit again.",
+    gstSection: "GST & bills", gstMode: "GST registration", gstRegular: "Regular (charge GST)", gstComposition: "Composition (no GST on bill)", gstNone: "Not registered",
+    gstRateL: "GST rate %", gstOnL: "GST worked out on", gstOnFull: "Full bill (before old gold)", gstOnNet: "Bill after old gold",
+    gstinInput: "Shop GSTIN", addressL: "Shop address (on bills)", makingGL: "Default making % — gold", makingSL: "Default making % — silver",
+    exchGL: "Old gold: deduct %", exchSL: "Old silver: deduct %", maxDiscL: "Highest discount allowed %",
+    delSaleConfirm: no => `Delete bill ${no}? Only for a wrong entry. A GST bill should normally be cancelled with a credit note, not deleted.`,
+    oneBillNote: n => `${n} bills`,
+    signBuyL: "Signature / thumb at sale", delBuyConfirm: (no, name) => `Delete purchase no. ${no} from ${name}? Only for a wrong entry — it cannot be undone.`,
+  },
+  hi: {
+    appName: "गिरवी बही", syncCloud: "आपके खाते में सुरक्षित", syncLocal: "सिर्फ़ इस फ़ोन में सुरक्षित", settings: "सेटिंग", back: "वापस", loading: "बही खुल रही है…",
+    active: "चालू गिरवी", out: "बाहर गया पैसा", intToday: "आज तक का ब्याज",
+    searchPh: "नाम, फ़ोन, गाँव, सामान, नंबर खोजें", tabActive: "चालू", tabAttn: n => `ध्यान दें (${n})`, tabClosed: "बंद",
+    empty: "अभी कोई गिरवी नहीं। पहली एंट्री के लिए “नई गिरवी” दबाएँ।", nomatch: "यहाँ कुछ नहीं मिला।", newBtn: "+ नई गिरवी",
+    no: "नं.", since: d => d + " से",
+    fClosed: "बंद", fDanger: "बकाया सामान की कीमत के पास", fWatch: "कीमत पर नज़र रखें", fMonths: n => n + " महीने",
+    girviNo: n => "गिरवी नं. " + n, settledOn: d => d + " को हिसाब पूरा",
+    toRedeem: (p, i) => `आज छुड़ाने के लिए — मूल ${p} + ब्याज ${i}`,
+    ltvLine: (pct, v) => `यह आज सामान की कीमत (${v}) का ${pct}% है।`,
+    redeem: "छुड़ाएँ और बंद करें", part: "कुछ रकम जमा", waRem: "WhatsApp पर याद दिलाएँ",
+    item: "सामान", desc: "विवरण", metal: "धातु", gold: "सोना", silver: "चाँदी", weights: "कुल / शुद्ध वज़न", valStart: "गिरवी के समय कीमत", valNow: "आज की कीमत",
+    loan: "कर्ज़", givenOn: "दिया गया", amtGiven: "दी गई रकम", interest: "ब्याज", perMonth: r => r + "% महीना", counting: "ब्याज की गिनती",
+    runningLabel: "कितने समय से", runningFor: (m, d) => `${m} महीने ${d} दिन`, intRecv: "मिला ब्याज", payments: "जमा", date: "तारीख", note: "टिप्पणी", amount: "रकम", noPays: "अभी कोई जमा नहीं।",
+    resend: "रसीद फिर भेजें", edit: "एंट्री बदलें", del: "हटाएँ",
+    delConfirm: (no, name) => `${name} की गिरवी नं. ${no} हटाएँ? सिर्फ़ गलत एंट्री के लिए — यह वापस नहीं आएगी।`, deleted: "एंट्री हटा दी",
+    mFull: "महीने का हिस्सा = पूरा महीना", mHalf: "15 दिन तक = आधा महीना", mDay: "रोज़ के हिसाब से (30 दिन का महीना)",
+    redeemTitle: n => "गिरवी नं. " + n + " छुड़ाएँ", partTitle: n => "कुछ रकम जमा — गिरवी नं. " + n,
+    amtRecv: "मिली रकम (₹)", noteOpt: "टिप्पणी (ज़रूरी नहीं)", notePh: "जैसे बेटे ने जमा किया", closeBtn: "गिरवी बंद करें", savePay: "जमा सहेजें", cancel: "रद्द करें",
+    dueOn: (d, p, i) => `इस तारीख तक बकाया: ${d} (${p} + ${i} ब्याज)।`, short: x => ` ${x} कम — बंद करने पर यह छूट जाएगा।`,
+    split: (a, b, c) => `${a} ब्याज में, ${b} मूल में कटेगा। इसके बाद बाकी: ${c}।`, intOn: i => `इस तारीख तक ब्याज: ${i}।`,
+    pickDate: "कर्ज़ की तारीख या उसके बाद की तारीख चुनें", enterAmt: "मिली रकम लिखें", coversAll: "इतने में पूरा हिसाब हो जाता है — “छुड़ाएँ और बंद करें” चुनें",
+    closedToast: "गिरवी बंद हुई", paySaved: "जमा सहेजा गया", noteRedeemed: "छुड़ाया", notePart: "कुछ रकम जमा",
+    askReceipt: "ग्राहक को रसीद भेजें?", sendWa: "WhatsApp पर भेजें",
+    newTitle: "नई गिरवी", editTitle: n => "गिरवी नं. " + n + " बदलें", custName: "ग्राहक का नाम *", mobile: "मोबाइल", village: "गाँव",
+    itemReq: "सामान *", itemPh: "जैसे 2 सोने के कंगन", purity: "शुद्धता", gross: "कुल वज़न (ग्राम)", net: "शुद्ध वज़न (ग्राम) *",
+    loanGiven: "दी गई रकम (₹) *", ratePM: "ब्याज % / महीना *", notes: "टिप्पणी", notesPh: "पहचान पत्र देखा, सामान पर निशान, कौन लाया",
+    saveNew: "गिरवी सहेजें", saveChanges: "बदलाव सहेजें", netHint: "सामान की कीमत देखने के लिए वज़न लिखें।",
+    valHint: v => `आज के भाव से सामान की कीमत: ${v}।`, loanPct: p => ` कर्ज़ इसका ${p}% है।`, above75: " 75% से ज़्यादा — भाव गिरा या ब्याज बढ़ा तो जोखिम।",
+    enterName: "ग्राहक का नाम लिखें", describeItem: "सामान का विवरण लिखें", enterNet: "शुद्ध वज़न लिखें", enterLoan: "कर्ज़ की रकम लिखें", enterRate: "ब्याज दर लिखें",
+    savedNo: n => `गिरवी नं. ${n} सहेजी गई`, changesSaved: "बदलाव सहेजे गए",
+    shop: "दुकान", shopName: "दुकान का नाम (रसीद पर दिखेगा)", rates: "आज के भाव", ratesNote: "अपने बाज़ार का वह भाव डालें जिस पर आप ख़रीदते हैं। सामान की कीमत और चेतावनियाँ इन्हीं से बनती हैं।",
+    gold24: "सोना 24K (₹ प्रति 10 ग्राम)", silverRate: "चाँदी 999 (₹ प्रति किलो)", defaults: "नई गिरवी के लिए पहले से भरा", flagAfter: "कितने महीने बाद चेतावनी",
+    language: "भाषा", appLang: "ऐप की भाषा", receiptLang: "रसीद और याद-संदेश की भाषा", saveSettings: "सेटिंग सहेजें", settingsSaved: "सेटिंग सहेजी गई",
+    backup: "बैकअप", backupCloud: "एंट्री आपके Claude खाते में सुरक्षित हैं। फिर भी हफ़्ते में एक बार फ़ाइल बैकअप लें।",
+    backupLocal: "एंट्री सिर्फ़ इस ब्राउज़र में हैं। यह साफ़ हुआ तो सब चला जाएगा — बार-बार बैकअप लें।",
+    export: "बैकअप निकालें", restore: "फ़ाइल से वापस लाएँ", backupSaved: "बैकअप सहेजा गया", backupNotSaved: "बैकअप नहीं सहेजा",
+    backupCopied: "बैकअप कॉपी हुआ — इसे नोट या अपने WhatsApp पर चिपका दें", exportNA: "यहाँ बैकअप नहीं निकल सकता",
+    restoreConfirm: n => `इस फ़ाइल से ${n} एंट्री वापस लाएँ? एक जैसी एंट्री बदल जाएँगी, बाकी रहेंगी।`, restored: "बैकअप वापस आ गया", badFile: "यह गिरवी बही का बैकअप नहीं है",
+    storageFull: "जगह भर गई — बैकअप निकालें", notSaved: "खाते में नहीं सहेजा — इंटरनेट देखें",
+    speak: "बोलें", listening: "सुन रहा है…", micBlocked: "यहाँ माइक की इजाज़त नहीं — कीबोर्ड का माइक इस्तेमाल करें", noSpeech: "सुनाई नहीं दिया — फिर बोलें", noNumber: "कोई संख्या नहीं सुनी — फिर बोलें",
+    voiceNote: "किसी खाने के पास 🎤 दबाकर बोलें। ऐप की भाषा में बोलें।",
+    purityPct: "शुद्धता %", addItem: "+ और सामान जोड़ें", removeItem: "सामान हटाएँ", itemN: n => "सामान " + n, items: "सामान",
+    totalNow: "आज कुल कीमत", value: "कीमत",
+    rateStrip: (g, sv, d) => `सोना 24K ${g} / 10 ग्राम · चाँदी 999 ${sv} / किलो · ${d} का भाव`, staleRates: "भाव पुराने हैं — नया कर्ज़ देने से पहले अपडेट करें।", updateRates: "भाव बदलें",
+    itemIncomplete: n => `सामान ${n}: विवरण और वज़न भरें`,
+    weight: "कांटे पर वज़न (ग्राम) *", phoneBad: "मोबाइल नंबर 10 अंकों का हो और 6–9 से शुरू हो", home: "होम",
+    photos: "फ़ोटो", itemPhoto: "📷 सामान की फ़ोटो", custPhoto: "📷 ग्राहक की फ़ोटो", thumbPhoto: "📷 अँगूठे के निशान की फ़ोटो",
+    signTitle: "ग्राहक के हस्ताक्षर या अँगूठे का निशान", signHelp: "ग्राहक डिब्बे में उँगली से हस्ताक्षर करे — या स्याही वाला अँगूठा काग़ज़ पर लगाए और आप उसकी फ़ोटो लें।",
+    clearSign: "मिटाएँ", returnSignTitle: "सामान वापस मिलने पर हस्ताक्षर या अँगूठा", savingPhoto: "फ़ोटो सहेज रहे हैं…", photoFail: "फ़ोटो नहीं सहेजी — फिर कोशिश करें",
+    removePhoto: "फ़ोटो हटाएँ", itemPhotos: "सामान", custPhotoL: "ग्राहक", signL: "गिरवी के समय हस्ताक्षर / अँगूठा", returnSignL: "वापसी पर हस्ताक्षर / अँगूठा", close: "बंद करें",
+    stillSaving: "रुकिए — फ़ोटो अभी सहेजी जा रही है",
+    lockTitle: "PIN डालें", setPinTitle: "4 अंकों का PIN बनाएँ", confirmPin: "वही PIN दोबारा डालें", pinMismatch: "PIN मेल नहीं खाया — फिर से बनाएँ",
+    wrongPin: "गलत PIN", waitPin: s => `बहुत बार गलत — ${s} सेकंड रुकें`, forgotPin: "PIN भूल गए?", currentPin: "अभी का PIN डालें",
+    recoveryTitle: "यह रिकवरी कोड अपने रजिस्टर में लिख लें", recoveryHelp: "PIN भूल गए तो सिर्फ़ इसी कोड से बही खुलेगी। इसे काग़ज़ पर रखें, फ़ोन से दूर।",
+    wroteIt: "मैंने लिख लिया", enterRecovery: "रजिस्टर में लिखा रिकवरी कोड डालें", recoverBtn: "कोड से खोलें", badRecovery: "कोड सही नहीं है",
+    lockNow: "लॉक", setPinCard: "PIN लगाएँ — फ़ोन खोए या छिने तो कोई और बही न खोल सके।", setPinBtn: "PIN लगाएँ", later: "बाद में",
+    security: "सुरक्षा", changePin: "PIN बदलें", autoLock: "अपने-आप लॉक", immediately: "ऐप से हटते ही", mins: n => `${n} मिनट बाद`,
+    pinSet: "PIN लग गया", pinChanged: "PIN बदल गया", cancelPin: "रद्द करें",
+    privateCard: "निजी", caution: "इस ग्राहक से सावधान रहें", privateNote: "निजी नोट — लॉक होकर सहेजा जाता है, PIN के बिना कोई नहीं पढ़ सकता",
+    privatePh: "इस ग्राहक के बारे में जो याद रखना है", needPinForPrivate: "पहले PIN लगाएँ — निजी नोट उसी से लॉक होते हैं।",
+    showPrivate: "देखें", hidePrivate: "छुपाएँ", cautionEarlier: "⚑ इस ग्राहक की पिछली गिरवी पर सावधानी का निशान है।", noPrivateText: "कोई नोट नहीं लिखा।",
+    showAmounts: "रकम दिखाएँ", hideAmounts: "रकम छुपाएँ", pinOnNote: "चालू करें: सेटिंग → सुरक्षा",
+    welcome: "स्वागत है", welcomeText: "आपकी गिरवी बही, इसी फ़ोन में। बिना इंटरनेट चलती है। सब कुछ PIN से लॉक रहता है।",
+    startNew: "PIN बनाकर शुरू करें", restoreOld: "पुराने फ़ोन का बैकअप वापस लाएँ",
+    shopCode: "दुकान का कोड — रजिस्टर में लिख लें", helperCode: "सहायक कोड — ऐप लगाने वाले को दें",
+    codesHelp: "PIN भूल गए? इनमें से कोई भी कोड बही खोल देगा। इन्हें काग़ज़ पर रखें, इस फ़ोन में कभी नहीं।",
+    backupPin: "पुराने फ़ोन का PIN डालें", useCodeInstead: "PIN की जगह रिकवरी कोड डालें", restoreFrom: "पुराने फ़ोन का रिकवरी कोड डालें",
+    replaceAll: "इस फ़ोन का सारा डेटा बैकअप से बदल जाएगा। आगे बढ़ें?",
+    backupNote: "सब कुछ इसी फ़ोन में, PIN से लॉक रहता है। हर हफ़्ते बैकअप लें: फ़ाइल अपनी Google Drive, Gmail या WhatsApp पर भेज दें। फ़ाइल भी लॉक रहती है — सिर्फ़ आपके PIN या रिकवरी कोड से खुलेगी।",
+    backupDue: d => d ? `पिछला बैकअप: ${d}। फ़ोन खोया तो सिर्फ़ बैकअप से ही बही बचेगी।` : "अभी तक कोई बैकअप नहीं। फ़ोन खोया तो सिर्फ़ बैकअप से ही बही बचेगी।",
+    backupNow: "अभी बैकअप लें", syncPhone: "इसी फ़ोन में सुरक्षित",
+    secGirvi: "गिरवी", secBuy: "खरीद", newBuy: "+ नई खरीद", buyTitle: "नई खरीद", buyNo: n => "खरीद नं. " + n,
+    buyMonthCount: "इस महीने खरीद", buyMonthPaid: "इस महीने दिए", buyTotal: "कुल खरीद", buyEmpty: "अभी कोई खरीद नहीं। “नई खरीद” दबाएँ।",
+    buySearchPh: "नाम, फ़ोन, सामान, नंबर खोजें",
+    marketVal: "धातु की बाज़ार कीमत", startOffer: "यहाँ से बात शुरू करें", maxPay: "इससे ऊपर मत जाएँ",
+    agreed: "तय हुई रकम (₹) *", agreedOk: "ठीक है — आपके मुनाफ़े के अंदर।", agreedWarn: "पेशकश से ऊपर — मुनाफ़ा कम हो रहा है।",
+    agreedBad: x => `आपकी सीमा से ${x} ज़्यादा। इतना मत दीजिए।`, ownership: "ग्राहक ने बताया सामान उसका अपना है और मर्ज़ी से बेच रहा है",
+    needOwnership: "सहेजने से पहले मालिकाना वाली लाइन पर टिक करें", enterPaid: "तय हुई रकम लिखें", saveBuy: "खरीद सहेजें",
+    paidL: "दिए", valueThen: "उस दिन की कीमत", marginL: "आपका मुनाफ़ा", buySaved: n => `खरीद नं. ${n} सहेजी गई`,
+    payMode: "भुगतान", cash: "नकद", upi: "UPI / बैंक", cashWarn: "एक दिन में एक व्यक्ति को ₹10,000 से ज़्यादा नकद देने पर टैक्स की दिक्कत हो सकती है — UPI या बैंक से दें, या अपने CA से पूछें।",
+    buyMargins: "खरीद का मुनाफ़ा", offerG: "सोना: बात शुरू (कीमत से % कम)", minG: "सोना: कम से कम मुनाफ़ा (%)",
+    offerS: "चाँदी: बात शुरू (कीमत से % कम)", minS: "चाँदी: कम से कम मुनाफ़ा (%)",
+
+    secSale: "बिक्री", newSale: "+ नया बिल", saleTitle: "नया बिल", billNo: n => "बिल नं. " + n,
+    saleMonthCount: "इस महीने बिल", saleMonthAmt: "इस महीने बिक्री", saleMonthGst: "इस महीने GST", saleEmpty: "अभी कोई बिल नहीं। “नया बिल” दबाएँ।",
+    makingPct: "बनवाई %", otherAmt: "नग / अन्य ₹", rateUsed: "भाव", metalVal: "धातु", makingL: "बनवाई", amountL: "रकम",
+    newItems: "नया सामान", oldItems: "बदले में दिया पुराना सोना / चाँदी", addOld: "+ पुराना सामान जोड़ें", noOld: "कुछ नहीं दिया",
+    oldValue: "पुराने सामान की कीमत", oldAgreed: "पुराना सामान — तय कीमत (₹)",
+    marketPrice: "बाज़ार मूल्य", discount: "छूट (₹)", discPct: p => `${p}% छूट`, discTooHigh: m => `आपके नियम ${m}% से ज़्यादा — हर ग्राहक के लिए एक ही नियम।`,
+    taxable: "कर योग्य मूल्य", gstL: r => `GST ${r}%`, cgst: r => `CGST ${r}%`, sgst: r => `SGST ${r}%`, billTotal: "बिल का कुल",
+    lessOld: "घटाएँ: पुराना सामान", roundOff: "राउंड ऑफ़", toPay: "ग्राहक देगा", toReturn: "दुकान ग्राहक को देगी",
+    splitBills: "हर सामान का अलग बिल (अलग-अलग लोगों को देने के लिए)", panL: "PAN (₹2 लाख या ज़्यादा के बिल पर ज़रूरी)",
+    needPan: "₹2 लाख या ज़्यादा के बिल पर PAN ज़रूरी है", cashBan: "₹2 लाख या ज़्यादा नकद नहीं ले सकते — UPI या बैंक से लें।",
+    saveSale: "बिल सहेजें", saleSaved: n => `बिल ${n} सहेजा गया`, bills: "बिल", viewBill: "देखें / प्रिंट", printBill: "🖨 प्रिंट / PDF",
+    taxInvoice: "टैक्स इनवॉइस", billOfSupply: "बिल ऑफ़ सप्लाई", estimate: "बिल", hsn: "HSN", custL: "ग्राहक", gstinL: "GSTIN",
+    signatory: "दुकान की ओर से — हस्ताक्षर", thanks: "धन्यवाद। फिर पधारें।",
+    gstSection: "GST और बिल", gstMode: "GST पंजीकरण", gstRegular: "रेगुलर (बिल पर GST)", gstComposition: "कंपोज़िशन (बिल पर GST नहीं)", gstNone: "पंजीकृत नहीं",
+    gstRateL: "GST दर %", gstOnL: "GST किस पर", gstOnFull: "पूरे बिल पर (पुराने सोने से पहले)", gstOnNet: "पुराना सोना घटाने के बाद",
+    gstinInput: "दुकान का GSTIN", addressL: "दुकान का पता (बिल पर)", makingGL: "बनवाई % — सोना", makingSL: "बनवाई % — चाँदी",
+    exchGL: "पुराना सोना: कटौती %", exchSL: "पुरानी चाँदी: कटौती %", maxDiscL: "ज़्यादा से ज़्यादा छूट %",
+    delSaleConfirm: no => `बिल ${no} हटाएँ? सिर्फ़ गलत एंट्री के लिए। GST बिल आम तौर पर क्रेडिट नोट से रद्द होता है, हटाया नहीं जाता।`,
+    oneBillNote: n => `${n} बिल`,
+    signBuyL: "बिक्री पर हस्ताक्षर / अँगूठा", delBuyConfirm: (no, name) => `${name} की खरीद नं. ${no} हटाएँ? सिर्फ़ गलत एंट्री के लिए — यह वापस नहीं आएगी।`,
+  },
+};
+const lang = () => (S.settings.lang === "en" ? "en" : "hi");
+function t(k, ...a) { const v = T[lang()][k] ?? T.en[k]; return typeof v === "function" ? v(...a) : v; }
+const methods = () => ({ full: t("mFull"), half: t("mHalf"), day: t("mDay") });
+
+// ---------- Storage: private cloud (db) when available, else this browser ----------
+const LS_KEY = "girvi-bahi:v1";
+const DEFAULT_SETTINGS = { shopName: "My Jewellers", rate: 2, method: "full", gold24: 14759, silver: 240, ratesDate: "2026-10-15", overdueMonths: 6, lang: "hi", receiptLang: "hi", autoLock: 1, buyOfferG: 8, buyMinG: 4, buyOfferS: 15, buyMinS: 8,
+  gstMode: "regular", gstRate: 3, gstOn: "full", gstin: "", shopAddress: "", makingG: 12, makingS: 10, exchDedG: 2, exchDedS: 5, maxDisc: 5 };
+const S = { settings: { ...DEFAULT_SETTINGS }, pledges: {}, buys: {}, sales: {}, mode: "local", view: { name: "list", tab: "active", q: "" }, showAmt: false, pinCardHidden: false };
+let col = null, downloads = null, assets = null;
+const writeQ = {};
+
+// Phone storage (IndexedDB). Only "meta" (language + locked keys) is readable without the PIN;
+// the register itself ("vault") and every photo are stored scrambled with the PIN-protected key.
+const IDB = (() => {
+  let dbp;
+  const open = () => dbp || (dbp = new Promise((res, rej) => {
+    const r = indexedDB.open("girvi-bahi", 1);
+    r.onupgradeneeded = () => r.result.createObjectStore("kv");
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  }));
+  const tx = async (mode, fn) => {
+    const db = await open();
+    return new Promise((res, rej) => { const t = db.transaction("kv", mode); const req = fn(t.objectStore("kv")); t.oncomplete = () => res(req.result); t.onerror = () => rej(t.error); });
+  };
+  return { get: k => tx("readonly", s => s.get(k)), set: (k, v) => tx("readwrite", s => s.put(v, k)), del: k => tx("readwrite", s => s.delete(k)), keys: () => tx("readonly", s => s.getAllKeys()) };
+})();
+async function loadLocal() {
+  try { const m = await IDB.get("meta"); if (m) S.settings = { ...S.settings, lang: m.lang || "hi", lock: m.lock }; } catch (e) {}
+}
+let saveTimer = null;
+function saveLocal() { clearTimeout(saveTimer); saveTimer = setTimeout(writeVault, 250); }
+async function writeVault() {
+  clearTimeout(saveTimer); saveTimer = null;
+  if (!dataKey) return;
+  const { lock, ...settings } = S.settings;
+  const box = await seal(dataKey, new TextEncoder().encode(JSON.stringify({ settings, pledges: S.pledges, buys: S.buys, sales: S.sales })));
+  const prev = await IDB.get("vault");
+  if (prev) await IDB.set("vault_prev", prev);
+  await IDB.set("vault", box);
+  await IDB.set("meta", { lang: S.settings.lang, lock: S.settings.lock });
+}
+async function openVault() {
+  let box = await IDB.get("vault"), d = null;
+  try { if (box) d = JSON.parse(new TextDecoder().decode(await unseal(dataKey, box))); }
+  catch (e) { box = await IDB.get("vault_prev"); if (box) d = JSON.parse(new TextDecoder().decode(await unseal(dataKey, box))); }
+  if (d) { S.settings = { ...DEFAULT_SETTINGS, ...d.settings, lock: S.settings.lock, lang: S.settings.lang || d.settings.lang }; S.pledges = normalizeAll(d.pledges); S.buys = d.buys || {}; S.sales = d.sales || {}; }
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+}
+function queueWrite(id, fn) {
+  writeQ[id] = (writeQ[id] || Promise.resolve()).then(fn).catch(err => toast(err && err.code === "quota_exceeded" ? t("storageFull") : t("notSaved")));
+}
+// Older entries had one "item"; now a girvi holds a list of items (gold and silver can be mixed).
+// Gold purity is in karat, silver purity in percent ("touch").
+function normalize(p) {
+  if (!p || p.items) return p;
+  const q = { ...p };
+  q.items = p.item ? [{ desc: p.item.desc, metal: p.item.metal, purity: p.item.metal === "silver" ? 100 : Number(p.item.karat) || 22, grossWt: p.item.grossWt, netWt: p.item.netWt }] : [];
+  delete q.item;
+  return q;
+}
+function normalizeAll(obj) { const o = {}; Object.values(obj || {}).forEach(p => { const n = normalize(p); if (n && n.id) o[n.id] = n; }); return o; }
+function persistPledge(p) { S.pledges[p.id] = p; saveLocal(); if (col) queueWrite(p.id, () => col.doc(p.id).set(p)); }
+function removePledge(id) { const old = S.pledges[id]; delete S.pledges[id]; saveLocal(); dropPhotos(old); if (col) queueWrite(id, () => col.doc(id).delete()); }
+function persistSettings() { saveLocal(); if (col) queueWrite("settings", () => col.doc("settings").set(S.settings)); }
+
+async function connectCloud() {
+  if (!window.claude || !window.claude.use) return;
+  try {
+    const [db, user, dl, as] = await Promise.all([claude.use("db"), claude.use("user"), claude.use("downloads"), claude.use("assets")]);
+    downloads = dl; assets = as;
+    if (!db || !user) { render(); return; }
+    const uid = await user.id();
+    if (!uid) { render(); return; }
+    const c = db.collection("data/users/" + uid);
+    const first = await c.get();
+    if (first.empty && Object.keys(S.pledges).length) {
+      await c.doc("settings").set(S.settings);
+      for (const p of Object.values(S.pledges)) await c.doc(p.id).set(p);
+    }
+    col = c; S.mode = "cloud";
+    col.onSnapshot(snap => {
+      const pl = {}; let st = null;
+      snap.docs.forEach(d => { const v = d.data(); if (d.id === "settings") st = v; else if (v && v.kind === "pledge") pl[d.id] = normalize(v); });
+      S.pledges = pl; if (st) S.settings = { ...DEFAULT_SETTINGS, ...st };
+      saveLocal();
+      if (S.view.name === "list" || S.view.name === "detail") render(); else renderHeader();
+    }, () => { S.mode = "local"; col = null; renderHeader(); });
+  } catch (e) { render(); }
+}
+
+// ---------- Dates & money ----------
+const pad = n => String(n).padStart(2, "0");
+function todayISO() { const d = new Date(); return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()); }
+function parseD(s) { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); }
+function addMonths(dt, n) { const y = dt.getFullYear(), m = dt.getMonth() + n, day = dt.getDate(); return new Date(y, m, Math.min(day, new Date(y, m + 1, 0).getDate())); }
+function span(fromS, toS) {
+  const a = parseD(fromS), b = parseD(toS);
+  if (b <= a) return { months: 0, days: 0, total: 0 };
+  let m = (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+  if (addMonths(a, m) > b) m--;
+  return { months: m, days: Math.round((b - addMonths(a, m)) / 86400000), total: Math.round((b - a) / 86400000) };
+}
+function chargeMonths(fromS, toS, method) {
+  const { months, days } = span(fromS, toS);
+  if (method === "day") return months + days / 30;
+  if (method === "half") return months + (days === 0 ? 0 : days <= 15 ? 0.5 : 1);
+  return months + (days > 0 ? 1 : 0);
+}
+const inr = n => "₹" + Math.round(n || 0).toLocaleString("en-IN");
+const fmtD = (s, l = lang()) => parseD(s).toLocaleDateString(l === "hi" ? "hi-IN" : "en-IN", { day: "numeric", month: "short", year: "numeric" });
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+// Interest-first: each payment clears interest due so far, the rest cuts principal. No compounding.
+function compute(p, asOf = todayISO()) {
+  let principal = p.principal, start = p.startDate, carry = 0, interestPaid = 0, principalPaid = 0;
+  const pays = [...(p.payments || [])].sort((x, y) => x.date.localeCompare(y.date));
+  for (const pay of pays) {
+    const acc = carry + principal * (p.rate / 100) * chargeMonths(start, pay.date, p.method);
+    if (pay.amount >= acc) { interestPaid += acc; const cut = Math.min(principal, pay.amount - acc); principal -= cut; principalPaid += cut; carry = 0; }
+    else { interestPaid += pay.amount; carry = acc - pay.amount; }
+    start = pay.date;
+  }
+  const end = p.status === "closed" ? (p.closedDate || asOf) : asOf;
+  const interest = p.status === "closed" ? 0 : carry + principal * (p.rate / 100) * chargeMonths(start, end, p.method);
+  const valueNow = pledgeValue(p), due = principal + interest;
+  return { principal, interest, due, interestPaid, principalPaid, age: span(p.startDate, asOf), valueNow, ltvNow: valueNow ? due / valueNow : null };
+}
+function itemValue(it) {
+  if (!it || !it.netWt) return 0;
+  if (it.metal === "silver") return it.netWt * S.settings.silver * (Number(it.purity) || 0) / 100;
+  return it.netWt * S.settings.gold24 * (Number(it.purity) || 0) / 24;
+}
+const pledgeValue = p => (p.items || []).reduce((s, it) => s + itemValue(it), 0);
+const descs = p => (p.items || []).map(i => i.desc).filter(Boolean).join(", ");
+const purityLabel = it => it.metal === "silver" ? `${it.purity}%` : `${it.purity}K`;
+const metalLabel = (it, L) => (it.metal === "silver" ? (L === "en" ? "Silver" : "चाँदी") : (L === "en" ? "Gold" : "सोना")) + " " + purityLabel(it);
+function ratesStale() { return !S.settings.ratesDate || span(S.settings.ratesDate, todayISO()).total > 2; }
+function flags(p, c) {
+  if (p.status === "closed") return [[t("fClosed"), "ok"]];
+  const f = [];
+  if (c.ltvNow && c.ltvNow >= 0.9) f.push([t("fDanger"), "danger"]);
+  else if (c.ltvNow && c.ltvNow >= 0.75) f.push([t("fWatch"), "warn"]);
+  if (c.age.months >= S.settings.overdueMonths) f.push([t("fMonths", c.age.months), "warn"]);
+  return f;
+}
+
+// ---------- WhatsApp (receipt language is separate from app language) ----------
+function phone10(v) {
+  let d = String(v || "").replace(/\D/g, "");
+  if (d.length === 12 && d.startsWith("91")) d = d.slice(2);
+  if (d.length === 11 && d.startsWith("0")) d = d.slice(1);
+  return d.slice(0, 10);
+}
+const phoneOk = d => /^[6-9]\d{9}$/.test(d);
+const showPhone = v => v ? "+91 " + phone10(v) : "";
+function waLink(phone, text) {
+  let d = String(phone || "").replace(/\D/g, "");
+  if (d.length === 10) d = "91" + d;
+  return "https://wa.me/" + d + "?text=" + encodeURIComponent(text);
+}
+function reminderText(p, c) {
+  const L = S.settings.receiptLang, td = fmtD(todayISO(), L);
+  return L === "en"
+    ? `Namaste ${p.customer.name} ji,\nFrom ${S.settings.shopName}. As of ${td}, ${inr(c.due)} is due on your girvi no. ${p.no} (${descs(p)}) — ${inr(c.principal)} principal + ${inr(c.interest)} interest.\nThank you.`
+    : `नमस्ते ${p.customer.name} जी,\n${S.settings.shopName} से। आपकी गिरवी नं. ${p.no} (${descs(p)}) पर ${td} तक ${inr(c.due)} बाकी है — मूल ${inr(c.principal)} + ब्याज ${inr(c.interest)}।\nधन्यवाद।`;
+}
+function receiptText(p, kind, amount) {
+  const L = S.settings.receiptLang, c = compute(p), sh = S.settings.shopName;
+  const lines = (p.items || []).map(it => `• ${it.desc} — ${metalLabel(it, L)}, ${it.netWt || "-"} ${L === "en" ? "g" : "ग्राम"}`).join("\n");
+  if (L === "en") {
+    if (kind === "new") return `${sh}\nGirvi receipt no. ${p.no}\nName: ${p.customer.name}\nItems:\n${lines}\nAmount given: ${inr(p.principal)}\nInterest: ${p.rate}% per month\nDate: ${fmtD(p.startDate, L)}\nPlease keep this receipt safe.`;
+    if (kind === "close") return `${sh}\nGirvi no. ${p.no} — redeemed\nName: ${p.customer.name}\nItems returned: ${descs(p)}\nTotal paid: ${inr(amount)}\nDate: ${fmtD(p.closedDate, L)}\nThank you.`;
+    return `${sh}\nGirvi no. ${p.no}\n${inr(amount)} received on ${fmtD(todayISO(), L)}\nNow due: ${inr(c.due)}`;
+  }
+  if (kind === "new") return `${sh}\nगिरवी रसीद नं. ${p.no}\nनाम: ${p.customer.name}\nसामान:\n${lines}\nदी गई रकम: ${inr(p.principal)}\nब्याज: ${p.rate}% महीना\nतारीख: ${fmtD(p.startDate, L)}\nयह रसीद संभाल कर रखें।`;
+  if (kind === "close") return `${sh}\nगिरवी नं. ${p.no} — छुड़ाई पूरी\nनाम: ${p.customer.name}\nसामान वापस: ${descs(p)}\nकुल जमा: ${inr(amount)}\nतारीख: ${fmtD(p.closedDate, L)}\nधन्यवाद।`;
+  return `${sh}\nगिरवी नं. ${p.no}\n${fmtD(todayISO(), L)} को ${inr(amount)} जमा हुए\nअब बाकी: ${inr(c.due)}`;
+}
+
+// ---------- Voice input (Web Speech API; falls back to the keyboard's own mic) ----------
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let activeRec = null;
+function mic(id, kind = "text") {
+  if (!SR) return "";
+  return `<button type="button" class="mic" aria-label="${t("speak")}" title="${t("speak")}" onclick="listen('${id}','${kind}',this)">🎤</button>`;
+}
+function field(id, inputHtml, kind) { return `<div class="fld">${inputHtml}${mic(id, kind)}</div>`; }
+function spokenNumber(text) {
+  const s = text.replace(/[०-९]/g, d => "०१२३४५६७८९".indexOf(d)).replace(/,/g, "").toLowerCase();
+  const m = s.match(/(\d+(?:\.\d+)?)\s*(हज़ार|हजार|hazaar|hazar|thousand|लाख|lakh|lac|k)?/);
+  if (!m) return null;
+  let n = parseFloat(m[1]);
+  if (m[2]) n *= /लाख|lakh|lac/.test(m[2]) ? 100000 : 1000;
+  return n;
+}
+function listen(id, kind, btn) {
+  if (activeRec) { activeRec.abort(); activeRec = null; return; }
+  const el = document.getElementById(id);
+  const rec = new SR();
+  rec.lang = lang() === "hi" ? "hi-IN" : "en-IN"; rec.interimResults = false; rec.maxAlternatives = 1;
+  activeRec = rec; btn.classList.add("on"); btn.setAttribute("aria-label", t("listening"));
+  toast(t("listening"));
+  rec.onresult = e => {
+    const said = e.results[0][0].transcript.trim();
+    if (kind === "phone") {
+      const d = phone10(said.replace(/[०-९]/g, x => "०१२३४५६७८९".indexOf(x)));
+      if (d.length < 10) return toast(t("noNumber"));
+      el.value = d;
+    } else if (kind === "num") {
+      const n = spokenNumber(said);
+      if (n == null) return toast(t("noNumber"));
+      el.value = n;
+    } else el.value = el.tagName === "TEXTAREA" && el.value ? el.value + " " + said : said;
+    el.dispatchEvent(new Event("input", { bubbles: true }));
+  };
+  rec.onerror = e => toast(e.error === "not-allowed" || e.error === "service-not-allowed" ? t("micBlocked") : t("noSpeech"));
+  rec.onend = () => { activeRec = null; btn.classList.remove("on"); btn.setAttribute("aria-label", t("speak")); };
+  try { rec.start(); } catch (e) { activeRec = null; btn.classList.remove("on"); toast(t("micBlocked")); }
+}
+
+// ---------- Photos & signatures ----------
+// Photos are shrunk on the phone, then kept in the artifact's file store when available,
+// otherwise as a small image inside the entry itself.
+const photoSrc = ph => ph ? (ph.url || ph.data || "/_blob/" + ph.id) : "";
+let pendingUploads = 0;
+async function shrink(blob, max, q) {
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+    const x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); x.drawImage(img, 0, 0, c.width, c.height);
+    return await new Promise(r => c.toBlob(r, "image/jpeg", q));
+  } finally { URL.revokeObjectURL(url); }
+}
+const toDataURL = b => new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(b); });
+async function storeImage(blob) {
+  pendingUploads++;
+  try {
+    const small = await shrink(blob, 1280, 0.72);
+    const id = "ph-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+    await IDB.set("ph:" + id, await seal(dataKey, new Uint8Array(await small.arrayBuffer())));
+    return { lid: id };
+  } finally { pendingUploads--; }
+}
+let urlCache = {};
+async function photoURL(id) {
+  if (urlCache[id]) return urlCache[id];
+  const box = await IDB.get("ph:" + id);
+  if (!box || !dataKey) return "";
+  return (urlCache[id] = URL.createObjectURL(new Blob([await unseal(dataKey, box)], { type: "image/jpeg" })));
+}
+function dropPhotos(p) {
+  const ph = (p && p.photos) || {};
+  [...(ph.items || []), ph.customer, ph.sign, ph.returnSign].forEach(x => { if (x && x.lid) IDB.del("ph:" + x.lid).catch(() => {}); });
+}
+new MutationObserver(() => document.querySelectorAll("img[data-ph]:not([src])").forEach(img => {
+  photoURL(img.dataset.ph).then(u => { if (u) img.src = u; }).catch(() => {});
+})).observe(document.body, { childList: true, subtree: true });
+let extAt = 0; // camera or share sheet open: the app is briefly in the background on purpose
+const extAct = () => { extAt = Date.now(); };
+let formPhotos = { items: [], customer: null, sign: null };
+function thumb(ph, onRemove) {
+  return `<span class="th"><img ${ph.lid ? `data-ph="${ph.lid}"` : `src="${esc(photoSrc(ph))}"`} alt="" onclick="lightbox(this.src)">${onRemove ? `<button type="button" aria-label="${t("removePhoto")}" onclick="${onRemove}">×</button>` : ""}</span>`;
+}
+function camBtn(label, handler, multiple) {
+  return `<label class="btn cam" onclick="extAct()">${label}<input type="file" accept="image/*" capture="environment" ${multiple ? "multiple" : ""} hidden onchange="${handler}(this)"></label>`;
+}
+function renderFormPhotos() {
+  const fp = formPhotos;
+  document.getElementById("f_photos").innerHTML = `
+    <div class="thumbs">${fp.items.map((ph, i) => thumb(ph, `formPhotos.items.splice(${i},1);renderFormPhotos()`)).join("")}${fp.customer ? thumb(fp.customer, "formPhotos.customer=null;renderFormPhotos()") : ""}</div>
+    <div class="actions">${camBtn(t("itemPhoto"), "addItemPhoto", true)}${fp.customer ? "" : camBtn(t("custPhoto"), "addCustPhoto")}</div>`;
+}
+async function takePhotos(input, put) {
+  const files = [...input.files]; input.value = "";
+  if (!files.length) return;
+  toast(t("savingPhoto"));
+  for (const f of files) { try { put(await storeImage(f)); } catch (e) { toast(t("photoFail")); } }
+}
+const addItemPhoto = inp => takePhotos(inp, ph => { formPhotos.items.push(ph); renderFormPhotos(); });
+const addCustPhoto = inp => takePhotos(inp, ph => { formPhotos.customer = ph; renderFormPhotos(); });
+
+// Signature pad: finger signature in blue ink, or a photo of an inked thumb impression.
+const pads = {};
+function sigBlock(key, title, existing) {
+  pads[key] = { dirty: false, photo: existing || null };
+  return `<fieldset class="itembox"><legend>${title}</legend>
+    <p class="muted" style="margin:0 0 8px">${t("signHelp")}</p>
+    <div id="sigwrap_${key}">${sigInner(key)}</div></fieldset>`;
+}
+function sigInner(key) {
+  const pd = pads[key];
+  if (pd.photo) return `<div class="thumbs">${thumb(pd.photo, `pads['${key}'].photo=null;resetSig('${key}')`)}</div>`;
+  return `<canvas id="sig_${key}" class="sigpad" aria-label="${t("signTitle")}"></canvas>
+    <div class="actions"><button type="button" class="btn" onclick="resetSig('${key}')">${t("clearSign")}</button>${camBtn(t("thumbPhoto"), `thumbFor_${key}`)}</div>`;
+}
+function resetSig(key) { pads[key].dirty = false; document.getElementById("sigwrap_" + key).innerHTML = sigInner(key); initPad(key); }
+function initPad(key) {
+  const cv = document.getElementById("sig_" + key);
+  if (!cv) return;
+  const r = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  cv.width = w * r; cv.height = h * r;
+  const x = cv.getContext("2d"); x.scale(r, r); x.fillStyle = "#fff"; x.fillRect(0, 0, w, h);
+  x.strokeStyle = "#1B2A8F"; x.lineWidth = 2.6; x.lineCap = "round"; x.lineJoin = "round";
+  let drawing = false;
+  const pt = e => { const b = cv.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  cv.onpointerdown = e => { drawing = true; cv.setPointerCapture(e.pointerId); const [a, b] = pt(e); x.beginPath(); x.moveTo(a, b); x.lineTo(a + 0.1, b + 0.1); x.stroke(); pads[key].dirty = true; };
+  cv.onpointermove = e => { if (!drawing) return; const [a, b] = pt(e); x.lineTo(a, b); x.stroke(); };
+  cv.onpointerup = cv.onpointercancel = () => { drawing = false; };
+}
+function thumbInput(key) {
+  window["thumbFor_" + key] = inp => takePhotos(inp, ph => { pads[key].photo = ph; resetSig(key); });
+}
+async function collectSig(key) {
+  const pd = pads[key];
+  if (!pd) return null;
+  if (pd.photo) return pd.photo;
+  if (!pd.dirty) return null;
+  const cv = document.getElementById("sig_" + key);
+  const blob = await new Promise(r => cv.toBlob(r, "image/jpeg", 0.85));
+  return storeImage(blob);
+}
+function lightbox(src) {
+  const d = document.createElement("div"); d.className = "lb"; d.setAttribute("role", "dialog");
+  d.innerHTML = `<img src="${esc(src)}" alt=""><button class="btn">${t("close")}</button>`;
+  d.onclick = () => d.remove(); document.body.appendChild(d);
+}
+function photoCard(p, signLabel) {
+  const ph = p.photos || {};
+  const row = (label, list) => list.length ? `<div class="muted" style="margin-top:8px">${label}</div><div class="thumbs">${list.map(x => thumb(x)).join("")}</div>` : "";
+  const html = row(t("itemPhotos"), ph.items || []) + row(t("custPhotoL"), ph.customer ? [ph.customer] : []) + row(signLabel || t("signL"), ph.sign ? [ph.sign] : []) + row(t("returnSignL"), ph.returnSign ? [ph.returnSign] : []);
+  return html ? `<div class="card"><h2>${t("photos")}</h2>${html}</div>` : "";
+}
+
+// ---------- PIN lock & private notes ----------
+// A random key locks private notes. That key is itself locked twice: by the PIN and by a
+// recovery code the shopkeeper writes on paper. Only scrambled data is ever stored.
+const b64 = buf => btoa(String.fromCharCode(...new Uint8Array(buf)));
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function kdf(secret, salt) {
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({ name: "PBKDF2", salt, iterations: 150000, hash: "SHA-256" }, base, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+}
+async function seal(key, bytes) { const iv = crypto.getRandomValues(new Uint8Array(12)); return { iv: b64(iv), ct: b64(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, bytes)) }; }
+async function unseal(key, box) { return new Uint8Array(await crypto.subtle.decrypt({ name: "AES-GCM", iv: unb64(box.iv) }, key, unb64(box.ct))); }
+async function wrapWith(secret, raw) { const salt = crypto.getRandomValues(new Uint8Array(16)); return { salt: b64(salt), ...(await seal(await kdf(secret, salt), raw)) }; }
+async function unwrapWith(secret, w) { return unseal(await kdf(secret, unb64(w.salt)), w); }
+const importDK = raw => crypto.subtle.importKey("raw", raw, "AES-GCM", false, ["encrypt", "decrypt"]);
+const normCode = s => String(s || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+function newRecoveryCode() { const A = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; return [...crypto.getRandomValues(new Uint8Array(12))].map(x => A[x % A.length]).join("").replace(/(.{4})(?!$)/g, "$1-"); }
+let dataKey = null, PF = null, lastActive = Date.now(), hiddenAt = null;
+const isLocked = () => !!S.settings.lock && !dataKey;
+const encryptNote = async text => seal(dataKey, new TextEncoder().encode(text));
+const decryptNote = async box => new TextDecoder().decode(await unseal(dataKey, box));
+async function saveLock(pin, raw, codes) {
+  const lock = { pin: await wrapWith(pin, raw), rec: codes ? await Promise.all(codes.map(c => wrapWith(normCode(c), raw))) : S.settings.lock.rec };
+  S.settings = { ...S.settings, lock }; dataKey = await importDK(raw);
+  await IDB.set("meta", { lang: S.settings.lang, lock });
+  persistSettings();
+}
+const recList = lock => Array.isArray(lock.rec) ? lock.rec : [lock.rec];
+async function unwrapAny(code, lock) {
+  for (const r of recList(lock)) { try { return await unwrapWith(normCode(code), r); } catch (e) { /* try the next code */ } }
+  throw new Error("bad code");
+}
+async function lockNow() {
+  if (!S.settings.lock || !dataKey) return;
+  try { await writeVault(); } catch (e) {}
+  Object.values(urlCache).forEach(u => URL.revokeObjectURL(u)); urlCache = {};
+  dataKey = null; S.pledges = {}; S.buys = {}; S.sales = {}; PF = { mode: "unlock", buf: "" }; document.querySelectorAll(".lb").forEach(x => x.remove()); render(); }
+function startSetPin() { PF = { mode: "set1", buf: "", raw: crypto.getRandomValues(new Uint8Array(32)), fresh: true }; drawPad(); }
+function startChangePin() { PF = { mode: "old", buf: "" }; drawPad(); }
+function endFlow() { PF = !S.settings.lock ? { mode: "welcome" } : isLocked() ? { mode: "unlock", buf: "" } : null; drawPad(); }
+function padTitle() {
+  return { unlock: t("lockTitle"), set1: t("setPinTitle"), set2: t("confirmPin"), old: t("currentPin"), restore: t("backupPin") }[PF.mode];
+}
+function drawPad() {
+  const el = document.getElementById("lock");
+  if (!PF) { el.hidden = true; el.innerHTML = ""; return; }
+  el.hidden = false;
+  if (PF.mode === "welcome") {
+    el.innerHTML = `<div class="lockbox"><div class="lockname">${t("appName")}</div><h2>${t("welcome")}</h2><p class="muted">${t("welcomeText")}</p>
+      <div class="actions" style="flex-direction:column"><button class="btn primary" onclick="startSetPin()">${t("startNew")}</button>
+      <label class="btn" style="margin:0">${t("restoreOld")}<input type="file" accept="application/json,.json" hidden onchange="importData(this.files[0])"></label>
+      <button class="linkbtn" onclick="S.settings.lang=lang()==='hi'?'en':'hi';drawPad()">${lang() === "hi" ? "English" : "हिंदी"}</button></div></div>`;
+    return;
+  }
+  if (PF.mode === "restorecode") {
+    el.innerHTML = `<div class="lockbox"><h2>${t("restoreFrom")}</h2><input id="rc" autocomplete="off" autocapitalize="characters" placeholder="XXXX-XXXX-XXXX" style="text-align:center;letter-spacing:2px">
+      <p class="hint danger" id="pfmsg">${PF.msg || ""}</p>
+      <div class="actions" style="justify-content:center"><button class="btn primary" onclick="restoreWithCode()">${t("recoverBtn")}</button><button class="btn" onclick="cancelRestore()">${t("cancelPin")}</button></div></div>`;
+    return;
+  }
+  if (PF.mode === "showcode") {
+    el.innerHTML = `<div class="lockbox"><h2>${t("recoveryTitle")}</h2><p class="muted" style="margin:0">${t("shopCode")}</p><p class="code num">${PF.codes[0]}</p>
+      <p class="muted" style="margin:0">${t("helperCode")}</p><p class="code num">${PF.codes[1]}</p><p class="muted">${t("codesHelp")}</p>
+      <button class="btn primary" onclick="toast(t('pinSet'));PF=null;drawPad();render()">${t("wroteIt")}</button></div>`;
+    return;
+  }
+  if (PF.mode === "recover") {
+    el.innerHTML = `<div class="lockbox"><h2>${t("enterRecovery")}</h2><input id="rc" autocomplete="off" autocapitalize="characters" placeholder="XXXX-XXXX-XXXX" style="text-align:center;letter-spacing:2px">
+      <p class="hint danger" id="pfmsg">${PF.msg || ""}</p>
+      <div class="actions" style="justify-content:center"><button class="btn primary" onclick="tryRecover()">${t("recoverBtn")}</button><button class="btn" onclick="PF={mode:'unlock',buf:''};drawPad()">${t("cancelPin")}</button></div></div>`;
+    return;
+  }
+  const dots = [0, 1, 2, 3].map(i => `<span class="dot ${i < PF.buf.length ? "on" : ""}"></span>`).join("");
+  const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "⌫"].map(k => k === "" ? "<span></span>" :
+    `<button class="key" onclick="padKey('${k}')" aria-label="${k === "⌫" ? "delete" : k}">${k}</button>`).join("");
+  el.innerHTML = `<div class="lockbox"><div class="lockname">${t("appName")}</div><h2>${padTitle()}</h2><div class="dots">${dots}</div>
+    <p class="hint danger" id="pfmsg">${PF.msg || ""}</p><div class="keys">${keys}</div>
+    ${PF.mode === "unlock" ? `<button class="linkbtn" onclick="PF={mode:'recover'};drawPad()">${t("forgotPin")}</button>`
+      : PF.mode === "restore" ? `<button class="linkbtn" onclick="PF={mode:'restorecode'};drawPad()">${t("useCodeInstead")}</button> · <button class="linkbtn" onclick="cancelRestore()">${t("cancelPin")}</button>`
+      : `<button class="linkbtn" onclick="endFlow()">${t("cancelPin")}</button>`}</div>`;
+}
+async function padKey(k) {
+  if (PF.busy) return;
+  if (PF.until && Date.now() < PF.until) { PF.msg = t("waitPin", Math.ceil((PF.until - Date.now()) / 1000)); return drawPad(); }
+  PF.msg = "";
+  if (k === "⌫") { PF.buf = PF.buf.slice(0, -1); return drawPad(); }
+  if (PF.buf.length >= 4) return;
+  PF.buf += k; drawPad();
+  if (PF.buf.length < 4) return;
+  const pin = PF.buf; PF.busy = true;
+  try {
+    if (PF.mode === "unlock") {
+      try { dataKey = await importDK(await unwrapWith(pin, S.settings.lock.pin)); await openVault(); PF = null; drawPad(); lastActive = Date.now(); render(); return; }
+      catch (e) { PF.fails = (PF.fails || 0) + 1; PF.buf = ""; PF.msg = t("wrongPin"); if (PF.fails % 5 === 0) PF.until = Date.now() + 30000 * (PF.fails / 5); }
+    } else if (PF.mode === "restore") {
+      try { return await finishRestore(await unwrapWith(pin, pendingRestore.lock.pin)); }
+      catch (e) { PF.buf = ""; PF.msg = t("wrongPin"); }
+    } else if (PF.mode === "old") {
+      try { PF = { mode: "set1", buf: "", raw: await unwrapWith(pin, S.settings.lock.pin) }; }
+      catch (e) { PF.buf = ""; PF.msg = t("wrongPin"); }
+    } else if (PF.mode === "set1") { PF = { ...PF, mode: "set2", first: pin, buf: "" }; }
+    else if (PF.mode === "set2") {
+      if (pin !== PF.first) { PF = { ...PF, mode: "set1", buf: "", msg: t("pinMismatch") }; }
+      else if (PF.fresh) { const codes = [newRecoveryCode(), newRecoveryCode()]; await saveLock(pin, PF.raw, codes); await writeVault(); PF = { mode: "showcode", codes }; }
+      else { const rec = PF.recovering; await saveLock(pin, PF.raw); if (rec) await openVault(); PF = null; toast(t("pinChanged")); if (rec) render(); else afterPinSet(); }
+    }
+  } finally { if (PF) PF.busy = false; }
+  drawPad();
+}
+async function tryRecover() {
+  try { const raw = await unwrapAny(document.getElementById("rc").value, S.settings.lock); PF = { mode: "set1", buf: "", raw, recovering: true }; }
+  catch (e) { PF.msg = t("badRecovery"); }
+  drawPad();
+}
+function afterPinSet() {
+  // Refresh only the parts that depend on the PIN, so a half-filled form is not lost
+  const box = document.getElementById("f_privbox");
+  if (box) box.innerHTML = privBoxInner({});
+  else if (!isLocked() && (S.view.name === "list" || S.view.name === "settings")) render();
+  else renderHeader();
+}
+document.addEventListener("visibilitychange", () => {
+  if (!S.settings.lock) return;
+  const outing = Date.now() - extAt < 120000;
+  if (document.visibilityState === "hidden") { hiddenAt = Date.now(); if (dataKey) writeVault().catch(() => {}); if (!S.settings.autoLock && !outing) lockNow(); }
+  else if (hiddenAt && Date.now() - hiddenAt > (outing ? Math.max(5, S.settings.autoLock) : S.settings.autoLock) * 60000) lockNow();
+});
+["pointerdown", "keydown"].forEach(ev => document.addEventListener(ev, () => { lastActive = Date.now(); }, true));
+setInterval(() => { if (S.settings.lock && dataKey && Date.now() - lastActive > Math.max(1, S.settings.autoLock) * 60000) lockNow(); }, 15000);
+
+// When the app runs on its own website, point this at a small rates endpoint that returns
+// {"gold24_10g": 147590, "silver_kg": 240000, "date": "2026-10-15"}. Inside Claude it stays off.
+const RATES_URL = "";
+async function liveRates() {
+  if (!RATES_URL || window.claude) return;
+  try {
+    const r = await (await fetch(RATES_URL, { cache: "no-store" })).json();
+    if (r.gold24_10g > 0 && r.silver_kg > 0) { S.settings = { ...S.settings, gold24: r.gold24_10g / 10, silver: r.silver_kg / 1000, ratesDate: r.date || todayISO() }; persistSettings(); if (!isLocked()) render(); }
+  } catch (e) { /* keep the last saved rates */ }
+}
+
+// Customers marked careful on an earlier girvi (matched by mobile, else exact name)
+function cautionFor(phone, name, exceptId) {
+  const n = (name || "").trim().toLowerCase();
+  return [...Object.values(S.pledges), ...Object.values(S.buys), ...Object.values(S.sales)].some(p => p.caution && p.id !== exceptId &&
+    ((phone && phone10(p.customer.phone) === phone) || (!phone && n && p.customer.name.trim().toLowerCase() === n)));
+}
+function checkCaution() {
+  const el = document.getElementById("f_caut");
+  if (el) el.textContent = cautionFor(phone10(f_phone.value), f_name.value, S.view.name === "edit" ? S.view.id : null) ? t("cautionEarlier") : "";
+}
+function privBoxInner(e) {
+  if (!S.settings.lock) return `<legend>🔒 ${t("privateCard")}</legend><p class="muted" style="margin:0 0 8px">${t("needPinForPrivate")}</p><button type="button" class="btn" onclick="startSetPin()">${t("setPinBtn")}</button>`;
+  return `<legend>🔒 ${t("privateCard")}</legend>
+    <label class="chk"><input type="checkbox" id="f_caution" ${e.caution ? "checked" : ""}> ⚑ ${t("caution")}</label>
+    <label for="f_private">${t("privateNote")}</label><textarea id="f_private" rows="2" placeholder="${t("privatePh")}"></textarea>`;
+}
+async function revealPrivate(id, btn) {
+  const box = document.getElementById("privtxt"), p = S.pledges[id] || S.buys[id] || S.sales[id];
+  if (!box.hidden) { box.hidden = true; box.textContent = ""; btn.textContent = t("showPrivate"); return; }
+  let txt = "";
+  try { txt = p.private ? await decryptNote(p.private) : ""; } catch (e) { txt = ""; }
+  box.innerHTML = `${p.caution ? `<p class="hint danger" style="margin:0 0 4px">⚑ ${t("caution")}</p>` : ""}<p style="margin:0">${esc(txt) || `<span class="muted">${t("noPrivateText")}</span>`}</p>`;
+  box.hidden = false; btn.textContent = t("hidePrivate");
+}
+
+// ---------- UI ----------
+const app = document.getElementById("app");
+function go(view) { S.view = { ...S.view, ...view }; render(); window.scrollTo(0, 0); }
+function toast(msg) { const el = document.getElementById("toast"); el.textContent = msg; el.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => el.hidden = true, 2600); }
+function switchLang() { S.settings.lang = lang() === "hi" ? "en" : "hi"; persistSettings(); render(); }
+
+function renderHeader() {
+  document.documentElement.lang = lang();
+  document.title = t("appName");
+  const v = S.view.name;
+  const back = v !== "list" ? `<button class="back" aria-label="${t("back")}" onclick="go({name:'list'})">‹</button>` : "";
+  document.getElementById("hbar").innerHTML = `${back}<h1><button class="home" onclick="go({name:'list'})" aria-label="${t("home")}">${t("appName")}</button><small>${esc(S.settings.shopName)} <span class="sync">· ${t("syncPhone")}</span></small></h1>
+    <button class="hbtn" onclick="switchLang()" aria-label="${t("language")}">${lang() === "hi" ? "EN" : "हिं"}</button>
+    ${isLocked() ? "" : `${S.settings.lock ? `<button class="hbtn" onclick="lockNow()" aria-label="${t("lockNow")}">🔒</button>` : ""}
+    ${v === "list" ? `<button class="hbtn" onclick="go({name:'settings'})">${t("settings")}</button>` : ""}`}`;
+}
+function render() {
+  renderHeader();
+  if (!S.settings.lock) { if (!PF) PF = { mode: "welcome" }; app.innerHTML = ""; drawPad(); return; }
+  if (isLocked()) { if (!PF || !["recover", "unlock", "set1", "set2", "restore", "restorecode"].includes(PF.mode)) PF = { mode: "unlock", buf: "" }; app.innerHTML = ""; drawPad(); return; }
+  const v = S.view.name;
+  if (v === "new") return renderForm();
+  if (v === "edit") return renderForm(S.pledges[S.view.id]);
+  if (v === "detail") return S.pledges[S.view.id] ? renderDetail(S.pledges[S.view.id]) : go({ name: "list" });
+  if (v === "pay") return renderPay(S.pledges[S.view.id]);
+  if (v === "settings") return renderSettings();
+  if (v === "buynew") return renderBuyForm();
+  if (v === "salenew") return renderSaleForm();
+  if (v === "saledetail") return S.sales[S.view.id] ? renderSaleDetail(S.sales[S.view.id]) : go({ name: "list" });
+  if (v === "bill") return S.sales[S.view.id] ? renderBill(S.sales[S.view.id], S.view.bill || 0) : go({ name: "list" });
+  if (S.view.section === "sale") return renderSaleList();
+  if (v === "buydetail") return S.buys[S.view.id] ? renderBuyDetail(S.buys[S.view.id]) : go({ name: "list" });
+  if (S.view.section === "buy") return renderBuyList();
+  renderList();
+}
+
+function listData() {
+  const all = Object.values(S.pledges).map(p => ({ p, c: compute(p) }));
+  const tab = S.view.tab, q = S.view.q.trim().toLowerCase();
+  let rows = all.filter(x => tab === "closed" ? x.p.status === "closed" : tab === "attention" ? x.p.status !== "closed" && flags(x.p, x.c).length : x.p.status !== "closed");
+  if (q) rows = rows.filter(x => [x.p.customer.name, x.p.customer.phone, x.p.customer.village, descs(x.p), String(x.p.no)].join(" ").toLowerCase().includes(q));
+  rows.sort((a, b) => b.p.startDate.localeCompare(a.p.startDate) || b.p.no - a.p.no);
+  return { all, rows };
+}
+const segHtml = () => `<div class="seg" role="tablist">${[["girvi", t("secGirvi")], ["buy", t("secBuy")], ["sale", t("secSale")]].map(([k, l]) =>
+  `<button role="tab" aria-selected="${(S.view.section || "girvi") === k}" onclick="go({section:'${k}'})">${l}</button>`).join("")}</div>`;
+function renderList() {
+  const { all, rows } = listData();
+  const active = all.filter(x => x.p.status !== "closed");
+  const out = active.reduce((s, x) => s + x.c.principal, 0), intr = active.reduce((s, x) => s + x.c.interest, 0);
+  const attention = active.filter(x => flags(x.p, x.c).length).length, tab = S.view.tab;
+  const tabBtn = (id, label) => `<button class="tab" aria-pressed="${tab === id}" onclick="go({tab:'${id}'})">${label}</button>`;
+  app.innerHTML = `
+    ${!S.settings.lock && !S.pinCardHidden ? `<div class="card" style="border-color:var(--gold)"><p style="margin:0 0 8px">🔒 ${t("setPinCard")}</p><div class="actions" style="margin:0"><button class="btn primary" onclick="startSetPin()">${t("setPinBtn")}</button><button class="btn" onclick="S.pinCardHidden=true;render()">${t("later")}</button></div></div>` : ""}
+    ${segHtml()}
+    ${all.length && (!S.settings.lastBackup || span(S.settings.lastBackup, todayISO()).total > 7) ? `<div class="card" style="border-color:var(--warn)"><p style="margin:0 0 8px">${t("backupDue", S.settings.lastBackup && fmtD(S.settings.lastBackup))}</p><button class="btn primary" onclick="exportData()">${t("backupNow")}</button></div>` : ""}
+    <div class="summary num">
+      <div><b>${active.length}</b><span>${t("active")}</span></div>
+      <div><b>${S.showAmt ? inr(out) : "₹ ••••"}</b><span>${t("out")}</span></div>
+      <div><b>${S.showAmt ? inr(intr) : "₹ ••••"}</b><span>${t("intToday")}</span></div>
+    </div>
+    <button class="linkbtn" style="margin:-8px 0 12px" onclick="S.showAmt=!S.showAmt;render()">${S.showAmt ? "🙈 " + t("hideAmounts") : "👁 " + t("showAmounts")}</button>
+    <div class="rates ${ratesStale() ? "stale" : ""}"><span class="num">${t("rateStrip", inr(S.settings.gold24 * 10), inr(S.settings.silver * 1000), fmtD(S.settings.ratesDate || todayISO()))}</span>${ratesStale() ? `<b>${t("staleRates")}</b>` : ""}<button class="linkbtn" onclick="go({name:'settings'})">${t("updateRates")}</button></div>
+    <div class="search">${field("q", `<input id="q" type="search" placeholder="${t("searchPh")}" value="${esc(S.view.q)}" oninput="S.view.q=this.value;renderRows()">`)}</div>
+    <div class="tabs">${tabBtn("active", t("tabActive"))}${tabBtn("attention", t("tabAttn", attention))}${tabBtn("closed", t("tabClosed"))}</div>
+    <div id="rows"></div>
+    <button class="fab" onclick="go({name:'new'})">${t("newBtn")}</button>`;
+  renderRows(rows);
+}
+function renderRows(rows = listData().rows) {
+  const el = document.getElementById("rows");
+  if (!rows.length) { el.innerHTML = `<p class="empty">${Object.keys(S.pledges).length ? t("nomatch") : t("empty")}</p>`; return; }
+  el.innerHTML = rows.map(({ p, c }) => {
+    const f = flags(p, c), closed = p.status === "closed";
+    return `<button class="row ${closed ? "closed" : ""} ${f.some(x => x[1] === "danger") ? "risk" : ""}" onclick="go({name:'detail',id:'${p.id}'})">
+      <div class="rtop"><strong>${esc(p.customer.name)}${p.caution ? ` <span class="mark" aria-hidden="true">⚑</span>` : ""}</strong><span class="due num">${closed ? inr(p.closedAmount) : inr(c.due)}</span></div>
+      <div class="rsub"><span>${t("no")} ${p.no} · ${esc(descs(p))}${f.map(x => `<span class="flag ${x[1]}">${x[0]}</span>`).join("")}</span><span class="num">${closed ? fmtD(p.closedDate) : t("since", fmtD(p.startDate))}</span></div>
+    </button>`;
+  }).join("");
+}
+
+function renderDetail(p) {
+  const c = compute(p), f = flags(p, c), closed = p.status === "closed";
+  const pays = [...(p.payments || [])].sort((a, b) => a.date.localeCompare(b.date));
+  app.innerHTML = `
+    <div class="card">
+      <div class="muted">${t("girviNo", p.no)} ${f.map(x => `<span class="flag ${x[1]}">${x[0]}</span>`).join("")}</div>
+      <h2 style="font-size:22px;margin:4px 0 2px">${esc(p.customer.name)}</h2>
+      <div class="muted">${esc(p.customer.village || "")} ${p.customer.phone ? "· " + esc(showPhone(p.customer.phone)) : ""}</div>
+      ${closed ? `<p class="bigdue num" style="margin-top:12px">${inr(p.closedAmount)}</p><div class="muted">${t("settledOn", fmtD(p.closedDate))}</div>` :
+      `<p class="bigdue num" style="margin:12px 0 0">${inr(c.due)}</p><div class="muted">${t("toRedeem", inr(c.principal), inr(c.interest))}</div>`}
+      ${!closed && c.ltvNow ? `<div class="hint ${c.ltvNow >= .9 ? "danger" : c.ltvNow >= .75 ? "warn" : ""}">${t("ltvLine", Math.round(c.ltvNow * 100), inr(c.valueNow))}</div>` : ""}
+      <div class="actions">
+        ${closed ? "" : `<button class="btn primary" onclick="go({name:'pay',id:'${p.id}',mode:'close'})">${t("redeem")}</button>
+        <button class="btn" onclick="go({name:'pay',id:'${p.id}',mode:'part'})">${t("part")}</button>`}
+        ${p.customer.phone && !closed ? `<a class="btn wa" target="_blank" rel="noopener" href="${waLink(p.customer.phone, reminderText(p, c))}">${t("waRem")}</a>` : ""}
+      </div>
+    </div>
+    <div class="card"><h2>${t("items")}</h2>
+      <div class="tw"><table class="num"><thead><tr><th>${t("desc")}</th><th>${t("metal")}</th><th class="r">g</th><th class="r">${t("valNow")}</th></tr></thead><tbody>
+        ${(p.items || []).map(it => `<tr><td>${esc(it.desc)}</td><td>${metalLabel(it, lang())}</td><td class="r">${it.netWt || "-"}</td><td class="r">${inr(itemValue(it))}</td></tr>`).join("")}
+        <tr><td colspan="3"><b>${t("totalNow")}</b></td><td class="r"><b>${inr(c.valueNow)}</b></td></tr>
+      </tbody></table></div>
+      <p class="muted" style="margin:8px 0 0">${t("valStart")}: ${inr(p.valueAtStart)}</p></div>
+    ${photoCard(p)}
+    ${p.caution || p.private ? `<div class="card"><h2>🔒 ${t("privateCard")}${p.caution ? ` <span class="mark">⚑</span>` : ""}</h2><div id="privtxt" hidden></div>
+      <button class="btn" style="margin-top:6px" onclick="revealPrivate('${p.id}',this)">${t("showPrivate")}</button></div>` : ""}
+    <div class="card"><h2>${t("loan")}</h2>
+      <dl class="kv num">
+        <dt>${t("givenOn")}</dt><dd>${fmtD(p.startDate)}</dd>
+        <dt>${t("amtGiven")}</dt><dd>${inr(p.principal)}</dd>
+        <dt>${t("interest")}</dt><dd>${t("perMonth", p.rate)}</dd>
+        <dt>${t("counting")}</dt><dd>${methods()[p.method]}</dd>
+        <dt>${t("runningLabel")}</dt><dd>${t("runningFor", c.age.months, c.age.days)}</dd>
+        <dt>${t("intRecv")}</dt><dd>${inr(c.interestPaid)}</dd>
+      </dl>
+      ${p.notes ? `<p class="muted" style="margin:10px 0 0">${esc(p.notes)}</p>` : ""}</div>
+    <div class="card"><h2>${t("payments")}</h2>
+      ${pays.length ? `<table class="num"><thead><tr><th>${t("date")}</th><th>${t("note")}</th><th class="r">${t("amount")}</th></tr></thead><tbody>
+        ${pays.map(x => `<tr><td>${fmtD(x.date)}</td><td>${esc(x.note || "")}</td><td class="r">${inr(x.amount)}</td></tr>`).join("")}
+      </tbody></table>` : `<p class="muted" style="margin:0">${t("noPays")}</p>`}</div>
+    <div class="actions">
+      ${p.customer.phone ? `<a class="btn" target="_blank" rel="noopener" href="${waLink(p.customer.phone, receiptText(p, closed ? "close" : "new", p.closedAmount))}">${t("resend")}</a>` : ""}
+      ${closed ? "" : `<button class="btn" onclick="go({name:'edit',id:'${p.id}'})">${t("edit")}</button>`}
+      <button class="btn danger" onclick="deletePledge('${p.id}')">${t("del")}</button>
+    </div>`;
+}
+function deletePledge(id) {
+  const p = S.pledges[id];
+  if (!confirm(t("delConfirm", p.no, p.customer.name))) return;
+  removePledge(id); toast(t("deleted")); go({ name: "list" });
+}
+
+function renderPay(p) {
+  const c = compute(p), close = S.view.mode === "close";
+  app.innerHTML = `<div class="card">
+    <h2>${close ? t("redeemTitle", p.no) : t("partTitle", p.no)}</h2>
+    <p class="muted" style="margin:0">${esc(p.customer.name)} · ${esc(descs(p))}</p>
+    <label for="pd">${t("date")}</label><input id="pd" type="date" value="${todayISO()}" max="${todayISO()}" min="${p.startDate}" onchange="payPreview()">
+    <label for="pa">${t("amtRecv")}</label>${field("pa", `<input id="pa" type="number" inputmode="numeric" min="1" value="${close ? Math.round(c.due) : ""}" oninput="payPreview()">`, "num")}
+    <label for="pn">${t("noteOpt")}</label>${field("pn", `<input id="pn" type="text" placeholder="${t("notePh")}">`)}
+    <div id="pp" class="hint"></div>
+    ${close ? sigBlock("ret", t("returnSignTitle")) : ""}
+    <div class="actions"><button class="btn primary" onclick="savePay(${close})">${close ? t("closeBtn") : t("savePay")}</button><button class="btn" onclick="go({name:'detail'})">${t("cancel")}</button></div>
+  </div>`;
+  if (close) { thumbInput("ret"); initPad("ret"); }
+  payPreview();
+}
+function payPreview() {
+  const p = S.pledges[S.view.id], close = S.view.mode === "close";
+  const date = document.getElementById("pd").value, amt = Number(document.getElementById("pa").value) || 0;
+  const c = compute(p, date), el = document.getElementById("pp");
+  if (close) {
+    el.className = "hint " + (amt && amt < Math.round(c.due) ? "warn" : "");
+    el.textContent = t("dueOn", inr(c.due), inr(c.principal), inr(c.interest)) + (amt && amt < Math.round(c.due) ? t("short", inr(c.due - amt)) : "");
+  } else {
+    el.className = "hint";
+    el.textContent = amt ? t("split", inr(Math.min(amt, c.interest)), inr(Math.max(0, Math.min(c.principal, amt - c.interest))), inr(c.due - amt)) : t("intOn", inr(c.interest));
+  }
+}
+async function savePay(close) {
+  const p = structuredClone(S.pledges[S.view.id]);
+  const date = document.getElementById("pd").value, amount = Number(document.getElementById("pa").value), note = document.getElementById("pn").value.trim();
+  if (!date || date < p.startDate) return toast(t("pickDate"));
+  if (!amount || amount <= 0) return toast(t("enterAmt"));
+  if (!close && amount >= compute(p, date).due) return toast(t("coversAll"));
+  p.payments = [...(p.payments || []), { date, amount, note: note || (close ? t("noteRedeemed") : t("notePart")) }];
+  if (close) {
+    if (pendingUploads) return toast(t("stillSaving"));
+    try { const rs = await collectSig("ret"); if (rs) p.photos = { ...(p.photos || {}), returnSign: rs }; } catch (e) { return toast(t("photoFail")); }
+  }
+  if (close) { p.status = "closed"; p.closedDate = date; p.closedAmount = p.payments.reduce((s, x) => s + x.amount, 0); }
+  persistPledge(p);
+  toast(close ? t("closedToast") : t("paySaved"));
+  go({ name: "detail", id: p.id });
+  if (p.customer.phone) setTimeout(() => offerReceipt(p, close ? "close" : "part", close ? p.closedAmount : amount), 50);
+}
+function offerReceipt(p, kind, amount) {
+  const bar = document.createElement("div");
+  bar.className = "card"; bar.style.borderColor = "var(--gold)";
+  bar.innerHTML = `<p style="margin:0 0 8px">${t("askReceipt")}</p><a class="btn wa" target="_blank" rel="noopener" href="${waLink(p.customer.phone, receiptText(p, kind, amount))}">${t("sendWa")}</a>`;
+  app.prepend(bar);
+}
+
+let formItems = [];
+const blankItem = (metal = "gold") => ({ desc: "", metal, purity: metal === "silver" ? 65 : 22, grossWt: null, netWt: null });
+function renderForm(p) {
+  const st = S.settings, e = p || {}, cu = e.customer || {};
+  formItems = e.items && e.items.length ? structuredClone(e.items) : [blankItem()];
+  const ph = e.photos || {};
+  formPhotos = { items: [...(ph.items || [])], customer: ph.customer || null, sign: ph.sign || null };
+  thumbInput("pledge");
+  app.innerHTML = `<div class="card">
+    <h2>${p ? t("editTitle", p.no) : t("newTitle")}</h2>
+    ${SR ? `<p class="muted" style="margin:0 0 4px">${t("voiceNote")}</p>` : ""}
+    <label for="f_name">${t("custName")}</label>${field("f_name", `<input id="f_name" autocomplete="off" value="${esc(cu.name)}" onblur="checkCaution()">`)}
+    <div id="f_caut" class="hint danger"></div>
+    <div>
+      <div><label for="f_phone">${t("mobile")}</label>${field("f_phone", `<div class="pfx"><span>+91</span><input id="f_phone" type="tel" inputmode="numeric" autocomplete="off" value="${esc(phone10(cu.phone))}" oninput="this.value=phone10(this.value);checkCaution()"></div>`, "phone")}</div>
+      <div><label for="f_vill">${t("village")}</label>${field("f_vill", `<input id="f_vill" value="${esc(cu.village)}">`)}</div>
+    </div>
+    <div id="f_items"></div>
+    <button type="button" class="btn" style="margin-top:10px" onclick="addItem()">${t("addItem")}</button>
+    <datalist id="silverP"><option value="58"><option value="65"><option value="70"><option value="80"><option value="92.5"></datalist>
+    <div class="grid2">
+      <div><label for="f_amt">${t("loanGiven")}</label>${field("f_amt", `<input id="f_amt" type="number" inputmode="numeric" value="${e.principal ?? ""}" oninput="formPreview()">`, "num")}</div>
+      <div><label for="f_rate">${t("ratePM")}</label><input id="f_rate" type="number" step="0.25" inputmode="decimal" value="${e.rate ?? st.rate}"></div>
+      <div><label for="f_date">${t("date")}</label><input id="f_date" type="date" max="${todayISO()}" value="${e.startDate || todayISO()}"></div>
+      <div><label for="f_method">${t("counting")}</label><select id="f_method">${Object.entries(methods()).map(([k, v]) => `<option value="${k}" ${(e.method || st.method) === k ? "selected" : ""}>${v}</option>`).join("")}</select></div>
+    </div>
+    <label for="f_notes">${t("notes")}</label>${field("f_notes", `<textarea id="f_notes" rows="2" placeholder="${t("notesPh")}">${esc(e.notes)}</textarea>`)}
+    <fieldset class="itembox"><legend>${t("photos")}</legend><div id="f_photos"></div></fieldset>
+    ${sigBlock("pledge", t("signTitle"), (e.photos || {}).sign)}
+    <fieldset class="itembox" id="f_privbox">${privBoxInner(e)}</fieldset>
+    <div id="fp" class="hint"></div>
+    ${ratesStale() ? `<div class="hint warn">${t("staleRates")}</div>` : ""}
+    <div class="actions"><button class="btn primary" onclick="saveForm()">${p ? t("saveChanges") : t("saveNew")}</button><button class="btn" onclick="go({name:${p ? "'detail'" : "'list'"}})">${t("cancel")}</button></div>
+  </div>`;
+  renderItems(); renderFormPhotos(); initPad("pledge"); checkCaution();
+  if (e.private && dataKey) decryptNote(e.private).then(txt => { const el = document.getElementById("f_private"); if (el) el.value = txt; }).catch(() => {});
+}
+function renderItems() {
+  const many = formItems.length > 1;
+  document.getElementById("f_items").innerHTML = formItems.map((it, i) => {
+    const purity = it.metal === "silver"
+      ? `<input id="it_pur_${i}" type="number" step="0.5" min="1" max="100" list="silverP" inputmode="decimal" value="${it.purity ?? ""}" oninput="itemsChanged()">`
+      : `<select id="it_pur_${i}" onchange="itemsChanged()">${[24, 22, 20, 18, 14].map(k => `<option value="${k}" ${Number(it.purity) === k ? "selected" : ""}>${k}K</option>`).join("")}</select>`;
+    return `<fieldset class="itembox">
+      <legend>${t("itemN", i + 1)}${many ? ` <button type="button" class="linkbtn" onclick="removeItem(${i})">${t("removeItem")}</button>` : ""}</legend>
+      <label for="it_desc_${i}">${t("itemReq")}</label>${field("it_desc_" + i, `<input id="it_desc_${i}" placeholder="${t("itemPh")}" value="${esc(it.desc)}" oninput="itemsChanged()">`)}
+      <div class="chips">${CHIPS[lang()].map(c => `<button type="button" class="chip" onclick="setDesc(${i},'${c}')">${c}</button>`).join("")}</div>
+      <div class="grid2">
+        <div><label for="it_metal_${i}">${t("metal")}</label><select id="it_metal_${i}" onchange="metalChanged(${i})">
+          <option value="gold" ${it.metal !== "silver" ? "selected" : ""}>${t("gold")}</option><option value="silver" ${it.metal === "silver" ? "selected" : ""}>${t("silver")}</option></select></div>
+        <div><label for="it_pur_${i}">${it.metal === "silver" ? t("purityPct") : t("purity")}</label>${purity}</div>
+      </div>
+      <label for="it_net_${i}">${t("weight")}</label>${field("it_net_" + i, `<input id="it_net_${i}" type="number" step="0.01" inputmode="decimal" value="${it.netWt ?? ""}" oninput="itemsChanged()">`, "num")}
+      ${S.view.name === "salenew" ? `<div class="grid2">
+        <div><label for="it_mk_${i}">${t("makingPct")}</label><input id="it_mk_${i}" type="number" step="0.5" min="0" inputmode="decimal" value="${it.makingPct ?? ""}" oninput="itemsChanged()"></div>
+        <div><label for="it_ot_${i}">${t("otherAmt")}</label><input id="it_ot_${i}" type="number" min="0" inputmode="numeric" value="${it.other ?? ""}" oninput="itemsChanged()"></div></div>` : ""}
+      <div class="muted num" id="it_val_${i}"></div>
+    </fieldset>`;
+  }).join("");
+  preview();
+}
+function readItems() {
+  formItems = formItems.map((it, i) => ({
+    desc: document.getElementById("it_desc_" + i).value.trim(), metal: document.getElementById("it_metal_" + i).value,
+    purity: Number(document.getElementById("it_pur_" + i).value) || null,
+    grossWt: formItems[i].grossWt ?? null, netWt: Number(document.getElementById("it_net_" + i).value) || null,
+    ...(document.getElementById("it_mk_" + i) ? { makingPct: Number(document.getElementById("it_mk_" + i).value) || 0, other: Number(document.getElementById("it_ot_" + i).value) || 0 } : {}),
+  }));
+  return formItems;
+}
+const CHIPS = {
+  hi: ["पायल", "बिछिया", "अँगूठी", "चेन", "पेंडेंट", "झाला", "झुमके", "कंगन", "कड़ा", "मंगलसूत्र", "नथ", "हार", "करधनी"],
+  en: ["Payal", "Bichhiya", "Ring", "Chain", "Pendant", "Jhala", "Jhumka", "Kangan", "Kada", "Mangalsutra", "Nath", "Haar", "Kardhani"],
+};
+function setDesc(i, name) { const el = document.getElementById("it_desc_" + i); el.value = name; itemsChanged(); el.focus(); }
+const preview = () => (S.view.name === "buynew" ? buyPreview() : S.view.name === "salenew" ? salePreview() : formPreview());
+function itemsChanged() { readItems(); preview(); }
+function metalChanged(i) {
+  readItems(); const m = formItems[i].metal; formItems[i].purity = m === "silver" ? (S.view.name === "salenew" ? 92.5 : 65) : 22;
+  if (S.view.name === "salenew") formItems[i].makingPct = m === "silver" ? S.settings.makingS : S.settings.makingG;
+  renderItems();
+}
+function addItem() { readItems(); formItems.push(S.view.name === "salenew" ? saleBlank(formItems[formItems.length - 1]?.metal || "gold") : blankItem(formItems[formItems.length - 1]?.metal || "gold")); renderItems(); document.getElementById("it_desc_" + (formItems.length - 1)).focus(); }
+function removeItem(i) { readItems(); formItems.splice(i, 1); renderItems(); }
+function formPreview() {
+  const items = readItems();
+  items.forEach((it, i) => { const v = itemValue(it); document.getElementById("it_val_" + i).textContent = v ? `${t("value")}: ${inr(v)}` : ""; });
+  const val = items.reduce((s, it) => s + itemValue(it), 0), amt = Number(f_amt.value) || 0, el = document.getElementById("fp");
+  if (!val) { el.className = "hint"; el.textContent = t("netHint"); return; }
+  const r = amt / val;
+  el.className = "hint " + (r > .9 ? "danger" : r > .75 ? "warn" : "");
+  el.textContent = t("valHint", inr(val)) + (amt ? t("loanPct", Math.round(r * 100)) + (r > .75 ? t("above75") : "") : "");
+}
+async function saveForm() {
+  const name = f_name.value.trim(), principal = Number(f_amt.value), rate = Number(f_rate.value);
+  if (!name) return toast(t("enterName"));
+  const items = readItems().filter(it => it.desc || it.netWt);
+  if (!items.length) return toast(t("describeItem"));
+  const bad = items.findIndex(it => !it.desc || !it.netWt || !it.purity);
+  if (bad >= 0) return toast(t("itemIncomplete", bad + 1));
+  if (!principal || principal <= 0) return toast(t("enterLoan"));
+  if (!rate || rate <= 0) return toast(t("enterRate"));
+  const phone = phone10(f_phone.value);
+  if (phone && !phoneOk(phone)) return toast(t("phoneBad"));
+  if (pendingUploads) return toast(t("stillSaving"));
+  let sign;
+  try { sign = await collectSig("pledge"); } catch (e) { return toast(t("photoFail")); }
+  const old = S.view.name === "edit" ? S.pledges[S.view.id] : null;
+  const p = old ? structuredClone(old) : {
+    kind: "pledge", id: "p-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    no: Math.max(0, ...Object.values(S.pledges).map(x => x.no || 0)) + 1, status: "active", payments: [], createdAt: new Date().toISOString(),
+  };
+  Object.assign(p, {
+    customer: { name, phone, village: f_vill.value.trim() },
+    caution: document.getElementById("f_caution") ? document.getElementById("f_caution").checked : !!(old && old.caution),
+    photos: { ...(old && old.photos || {}), items: formPhotos.items, customer: formPhotos.customer, sign },
+    items, principal, rate, method: f_method.value, startDate: f_date.value || todayISO(), notes: f_notes.value.trim(),
+  });
+  const privEl = document.getElementById("f_private");
+  if (privEl && dataKey) { const txt = privEl.value.trim(); p.private = txt ? await encryptNote(txt) : null; }
+  delete p.item;
+  if (!old) p.valueAtStart = Math.round(pledgeValue(p));
+  persistPledge(p);
+  toast(old ? t("changesSaved") : t("savedNo", p.no));
+  go({ name: "detail", id: p.id });
+  if (!old && p.customer.phone) setTimeout(() => offerReceipt(p, "new"), 50);
+}
+
+// ---------- Buying old gold & silver ----------
+const floor10 = n => Math.floor(n / 10) * 10;
+function buyCalc(items) {
+  const st = S.settings; let value = 0, offer = 0, limit = 0;
+  for (const it of items) {
+    const v = itemValue(it), sv = it.metal === "silver";
+    value += v; offer += v * (1 - (sv ? st.buyOfferS : st.buyOfferG) / 100); limit += v * (1 - (sv ? st.buyMinS : st.buyMinG) / 100);
+  }
+  return { value, offer: floor10(offer), limit: floor10(limit) };
+}
+function renderBuyList() {
+  const all = Object.values(S.buys), month = todayISO().slice(0, 7);
+  const thisMonth = all.filter(b => b.date.startsWith(month));
+  const q = (S.view.bq || "").trim().toLowerCase();
+  const rows = all.filter(b => !q || [b.customer.name, b.customer.phone, descs(b), String(b.no)].join(" ").toLowerCase().includes(q))
+    .sort((a, b) => b.date.localeCompare(a.date) || b.no - a.no);
+  app.innerHTML = `
+    ${segHtml()}
+    <div class="rates ${ratesStale() ? "stale" : ""}"><span class="num">${t("rateStrip", inr(S.settings.gold24 * 10), inr(S.settings.silver * 1000), fmtD(S.settings.ratesDate || todayISO()))}</span>${ratesStale() ? `<b>${t("staleRates")}</b>` : ""}<button class="linkbtn" onclick="go({name:'settings'})">${t("updateRates")}</button></div>
+    <div class="summary num">
+      <div><b>${thisMonth.length}</b><span>${t("buyMonthCount")}</span></div>
+      <div><b>${S.showAmt ? inr(thisMonth.reduce((s, b) => s + b.paid, 0)) : "₹ ••••"}</b><span>${t("buyMonthPaid")}</span></div>
+      <div><b>${all.length}</b><span>${t("buyTotal")}</span></div>
+    </div>
+    <button class="linkbtn" style="margin:-8px 0 12px" onclick="S.showAmt=!S.showAmt;render()">${S.showAmt ? "🙈 " + t("hideAmounts") : "👁 " + t("showAmounts")}</button>
+    <div class="search">${field("bq", `<input id="bq" type="search" placeholder="${t("buySearchPh")}" value="${esc(S.view.bq || "")}" oninput="S.view.bq=this.value;renderBuyRows()">`)}</div>
+    <div id="rows"></div>
+    <button class="fab" onclick="go({name:'buynew'})">${t("newBuy")}</button>`;
+  renderBuyRows(rows);
+}
+function renderBuyRows(rows) {
+  if (!rows) { const q = (S.view.bq || "").trim().toLowerCase(); rows = Object.values(S.buys).filter(b => !q || [b.customer.name, b.customer.phone, descs(b), String(b.no)].join(" ").toLowerCase().includes(q)).sort((a, b) => b.date.localeCompare(a.date) || b.no - a.no); }
+  const el = document.getElementById("rows");
+  el.innerHTML = rows.length ? rows.map(b => `<button class="row" onclick="go({name:'buydetail',id:'${b.id}'})">
+      <div class="rtop"><strong>${esc(b.customer.name)}${b.caution ? ` <span class="mark" aria-hidden="true">⚑</span>` : ""}</strong><span class="due num">${inr(b.paid)}</span></div>
+      <div class="rsub"><span>${t("no")} ${b.no} · ${esc(descs(b))}</span><span class="num">${fmtD(b.date)}</span></div></button>`).join("")
+    : `<p class="empty">${Object.keys(S.buys).length ? t("nomatch") : t("buyEmpty")}</p>`;
+}
+function renderBuyForm() {
+  formItems = [blankItem()];
+  formPhotos = { items: [], customer: null, sign: null };
+  thumbInput("buy");
+  app.innerHTML = `<div class="card">
+    <h2>${t("buyTitle")}</h2>
+    ${SR ? `<p class="muted" style="margin:0 0 4px">${t("voiceNote")}</p>` : ""}
+    <label for="f_name">${t("custName")}</label>${field("f_name", `<input id="f_name" autocomplete="off" onblur="checkCaution()">`)}
+    <div id="f_caut" class="hint danger"></div>
+    <label for="f_phone">${t("mobile")}</label>${field("f_phone", `<div class="pfx"><span>+91</span><input id="f_phone" type="tel" inputmode="numeric" autocomplete="off" oninput="this.value=phone10(this.value);checkCaution()"></div>`, "phone")}
+    <label for="f_vill">${t("village")}</label>${field("f_vill", `<input id="f_vill">`)}
+    <div id="f_items"></div>
+    <button type="button" class="btn" style="margin-top:10px" onclick="addItem()">${t("addItem")}</button>
+    <datalist id="silverP"><option value="58"><option value="65"><option value="70"><option value="80"><option value="92.5"></datalist>
+    <div class="bargain num" id="bx"></div>
+    <div class="grid2">
+      <div><label for="f_paid">${t("agreed")}</label>${field("f_paid", `<input id="f_paid" type="number" inputmode="numeric" oninput="buyPreview()">`, "num")}</div>
+      <div><label for="f_mode">${t("payMode")}</label><select id="f_mode" onchange="buyPreview()"><option value="cash">${t("cash")}</option><option value="upi">${t("upi")}</option></select></div>
+    </div>
+    <div id="bp" class="hint"></div>
+    <label class="chk" style="margin-top:12px"><input type="checkbox" id="f_own"> ${t("ownership")}</label>
+    <fieldset class="itembox"><legend>${t("photos")}</legend><div id="f_photos"></div></fieldset>
+    ${sigBlock("buy", t("signTitle"))}
+    <fieldset class="itembox" id="f_privbox">${privBoxInner({})}</fieldset>
+    ${ratesStale() ? `<div class="hint warn">${t("staleRates")}</div>` : ""}
+    <div class="actions"><button class="btn primary" onclick="saveBuy()">${t("saveBuy")}</button><button class="btn" onclick="go({name:'list'})">${t("cancel")}</button></div>
+  </div>`;
+  renderItems(); renderFormPhotos(); initPad("buy");
+}
+function buyPreview() {
+  const items = readItems();
+  items.forEach((it, i) => { const v = itemValue(it); document.getElementById("it_val_" + i).textContent = v ? `${t("value")}: ${inr(v)}` : ""; });
+  const c = buyCalc(items), bx = document.getElementById("bx"), bp = document.getElementById("bp");
+  if (!bx) return;
+  if (!c.value) { bx.innerHTML = ""; bp.className = "hint"; bp.textContent = t("netHint"); return; }
+  bx.innerHTML = `<div><span>${t("marketVal")}</span><b>${inr(c.value)}</b></div>
+    <div><span>${t("startOffer")}</span><b class="ok">${inr(c.offer)}</b></div>
+    <div class="limit"><span>${t("maxPay")}</span><b>${inr(c.limit)}</b></div>`;
+  const paid = Number(document.getElementById("f_paid").value) || 0, cash = document.getElementById("f_mode").value === "cash";
+  let msg = "", cls = "hint";
+  if (paid) {
+    if (paid > c.limit) { msg = t("agreedBad", inr(paid - c.limit)); cls += " danger"; }
+    else if (paid > c.offer) { msg = t("agreedWarn"); cls += " warn"; }
+    else msg = t("agreedOk");
+    msg += ` ${t("marginL")}: ${inr(c.value - paid)} (${Math.round((1 - paid / c.value) * 100)}%).`;
+    if (cash && paid > 10000) msg += " " + t("cashWarn");
+  }
+  bp.className = cls; bp.textContent = msg;
+}
+async function saveBuy() {
+  const name = f_name.value.trim(), paid = Number(f_paid.value), phone = phone10(f_phone.value);
+  if (!name) return toast(t("enterName"));
+  const items = readItems().filter(it => it.desc || it.netWt);
+  if (!items.length) return toast(t("describeItem"));
+  const bad = items.findIndex(it => !it.desc || !it.netWt || !it.purity);
+  if (bad >= 0) return toast(t("itemIncomplete", bad + 1));
+  if (phone && !phoneOk(phone)) return toast(t("phoneBad"));
+  if (!paid || paid <= 0) return toast(t("enterPaid"));
+  if (!f_own.checked) return toast(t("needOwnership"));
+  if (pendingUploads) return toast(t("stillSaving"));
+  let sign;
+  try { sign = await collectSig("buy"); } catch (e) { return toast(t("photoFail")); }
+  const c = buyCalc(items);
+  const b = {
+    kind: "buy", id: "b-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+    no: Math.max(0, ...Object.values(S.buys).map(x => x.no || 0)) + 1, date: todayISO(), createdAt: new Date().toISOString(),
+    customer: { name, phone, village: f_vill.value.trim() },
+    items: items.map(it => ({ ...it, valueAtBuy: Math.round(itemValue(it)) })),
+    value: Math.round(c.value), offer: c.offer, limit: c.limit, paid, mode: f_mode.value, ownership: true,
+    rates: { gold24: S.settings.gold24, silver: S.settings.silver },
+    photos: { items: formPhotos.items, customer: formPhotos.customer, sign },
+    caution: document.getElementById("f_caution") ? document.getElementById("f_caution").checked : false,
+  };
+  const privEl = document.getElementById("f_private");
+  if (privEl && dataKey && privEl.value.trim()) b.private = await encryptNote(privEl.value.trim());
+  S.buys[b.id] = b; saveLocal();
+  toast(t("buySaved", b.no));
+  go({ name: "buydetail", id: b.id });
+  if (b.customer.phone) setTimeout(() => {
+    const bar = document.createElement("div"); bar.className = "card"; bar.style.borderColor = "var(--gold)";
+    bar.innerHTML = `<p style="margin:0 0 8px">${t("askReceipt")}</p><a class="btn wa" target="_blank" rel="noopener" href="${waLink(b.customer.phone, buyReceipt(b))}">${t("sendWa")}</a>`;
+    app.prepend(bar);
+  }, 50);
+}
+function buyReceipt(b) {
+  const L = S.settings.receiptLang, sh = S.settings.shopName;
+  const lines = b.items.map(it => `• ${it.desc} — ${metalLabel(it, L)}, ${it.netWt} ${L === "en" ? "g" : "ग्राम"}`).join("\n");
+  return L === "en"
+    ? `${sh}\nPurchase receipt no. ${b.no}\nFrom: ${b.customer.name}\nItems bought:\n${lines}\nPaid: ${inr(b.paid)} (${b.mode === "cash" ? "cash" : "UPI/bank"})\nDate: ${fmtD(b.date, L)}\nThe seller stated these items are their own.\nThank you.`
+    : `${sh}\nखरीद रसीद नं. ${b.no}\nविक्रेता: ${b.customer.name}\nखरीदा सामान:\n${lines}\nभुगतान: ${inr(b.paid)} (${b.mode === "cash" ? "नकद" : "UPI/बैंक"})\nतारीख: ${fmtD(b.date, L)}\nविक्रेता ने बताया सामान उसका अपना है।\nधन्यवाद।`;
+}
+function renderBuyDetail(b) {
+  const margin = b.value - b.paid;
+  app.innerHTML = `
+    <div class="card">
+      <div class="muted">${t("buyNo", b.no)} · ${fmtD(b.date)}</div>
+      <h2 style="font-size:22px;margin:4px 0 2px">${esc(b.customer.name)}</h2>
+      <div class="muted">${esc(b.customer.village || "")} ${b.customer.phone ? "· " + esc(showPhone(b.customer.phone)) : ""}</div>
+      <p class="bigdue num" style="margin:12px 0 0">${inr(b.paid)}</p>
+      <div class="muted">${t("paidL")} · ${b.mode === "cash" ? t("cash") : t("upi")}</div>
+      <dl class="kv num" style="margin-top:10px">
+        <dt>${t("valueThen")}</dt><dd>${inr(b.value)}</dd>
+        <dt>${t("marginL")}</dt><dd class="${margin < 0 ? "neg" : ""}">${inr(margin)} (${b.value ? Math.round(margin / b.value * 100) : 0}%)</dd>
+        <dt>${t("maxPay")}</dt><dd>${inr(b.limit)}</dd>
+      </dl>
+    </div>
+    <div class="card"><h2>${t("items")}</h2>
+      <div class="tw"><table class="num"><thead><tr><th>${t("desc")}</th><th>${t("metal")}</th><th class="r">g</th><th class="r">${t("valueThen")}</th></tr></thead><tbody>
+        ${b.items.map(it => `<tr><td>${esc(it.desc)}</td><td>${metalLabel(it, lang())}</td><td class="r">${it.netWt}</td><td class="r">${inr(it.valueAtBuy)}</td></tr>`).join("")}
+      </tbody></table></div></div>
+    ${photoCard(b, t("signBuyL"))}
+    ${b.caution || b.private ? `<div class="card"><h2>🔒 ${t("privateCard")}${b.caution ? ` <span class="mark">⚑</span>` : ""}</h2><div id="privtxt" hidden></div>
+      <button class="btn" style="margin-top:6px" onclick="revealPrivate('${b.id}',this)">${t("showPrivate")}</button></div>` : ""}
+    <div class="actions">
+      ${b.customer.phone ? `<a class="btn" target="_blank" rel="noopener" href="${waLink(b.customer.phone, buyReceipt(b))}">${t("resend")}</a>` : ""}
+      <button class="btn danger" onclick="deleteBuy('${b.id}')">${t("del")}</button>
+    </div>`;
+}
+function deleteBuy(id) {
+  const b = S.buys[id];
+  if (!confirm(t("delBuyConfirm", b.no, b.customer.name))) return;
+  delete S.buys[id]; saveLocal(); dropPhotos(b); toast(t("deleted")); go({ name: "list" });
+}
+
+// ---------- Selling new jewellery: market price → discount → GST → old gold → pay ----------
+const r2 = n => Math.round(n * 100) / 100;
+const saleBlank = (metal = "gold") => ({ desc: "", metal, purity: metal === "silver" ? 92.5 : 22, netWt: null, makingPct: metal === "silver" ? S.settings.makingS : S.settings.makingG, other: 0 });
+function lineAmount(it) {
+  const metal = itemValue(it), making = metal * (Number(it.makingPct) || 0) / 100, other = Number(it.other) || 0;
+  return { metal: r2(metal), making: r2(making), other, amount: r2(metal + making + other), ratePerG: it.netWt ? r2(metal / it.netWt) : 0 };
+}
+const oldVal = it => itemValue(it) * (1 - (it.metal === "silver" ? S.settings.exchDedS : S.settings.exchDedG) / 100);
+// Works out one bill. Discount and old items are split across items by value when bills are separate.
+function billMath(lines, discount, oldAmt) {
+  const st = S.settings, gstOn = st.gstMode === "regular", rate = gstOn ? Number(st.gstRate) || 0 : 0;
+  const subtotal = r2(lines.reduce((s, l) => s + l.amount, 0));
+  const disc = Math.min(Math.max(0, discount || 0), subtotal), taxable = r2(subtotal - disc);
+  const base = st.gstOn === "net" ? Math.max(0, taxable - oldAmt) : taxable;
+  const gst = r2(base * rate / 100), total = r2(taxable + gst), raw = total - oldAmt, pay = Math.round(raw);
+  return { subtotal, disc, taxable, rate, gst, total, old: oldAmt, round: r2(pay - raw), pay };
+}
+function splitBills(lines, discount, oldAmt, split) {
+  if (!split || lines.length < 2) return [{ idx: lines.map((_, i) => i), ...billMath(lines, discount, oldAmt) }];
+  const sub = lines.reduce((s, l) => s + l.amount, 0) || 1;
+  let dLeft = discount, oLeft = oldAmt;
+  return lines.map((l, i) => {
+    const last = i === lines.length - 1, share = l.amount / sub;
+    const d = last ? dLeft : Math.round(discount * share), o = last ? oLeft : Math.round(oldAmt * share);
+    dLeft -= d; oLeft -= o;
+    return { idx: [i], ...billMath([l], d, o) };
+  });
+}
+let oldItems = [], oldTouched = false;
+function renderSaleList() {
+  const all = Object.values(S.sales), month = todayISO().slice(0, 7), tm = all.filter(x => x.date.startsWith(month));
+  const sum = f => tm.reduce((a, x) => a + x.bills.reduce((b, y) => b + f(y), 0), 0);
+  const rows = all.sort((a, b) => b.date.localeCompare(a.date) || b.createdAt.localeCompare(a.createdAt));
+  app.innerHTML = `
+    ${segHtml()}
+    <div class="rates ${ratesStale() ? "stale" : ""}"><span class="num">${t("rateStrip", inr(S.settings.gold24 * 10), inr(S.settings.silver * 1000), fmtD(S.settings.ratesDate || todayISO()))}</span>${ratesStale() ? `<b>${t("staleRates")}</b>` : ""}<button class="linkbtn" onclick="go({name:'settings'})">${t("updateRates")}</button></div>
+    <div class="summary num">
+      <div><b>${tm.reduce((a, x) => a + x.bills.length, 0)}</b><span>${t("saleMonthCount")}</span></div>
+      <div><b>${S.showAmt ? inr(sum(b => b.total)) : "₹ ••••"}</b><span>${t("saleMonthAmt")}</span></div>
+      <div><b>${S.showAmt ? inr(sum(b => b.gst)) : "₹ ••••"}</b><span>${t("saleMonthGst")}</span></div>
+    </div>
+    <button class="linkbtn" style="margin:-8px 0 12px" onclick="S.showAmt=!S.showAmt;render()">${S.showAmt ? "🙈 " + t("hideAmounts") : "👁 " + t("showAmounts")}</button>
+    <div id="rows">${rows.length ? rows.map(x => `<button class="row" onclick="go({name:'saledetail',id:'${x.id}'})">
+      <div class="rtop"><strong>${esc(x.customer.name)}${x.caution ? ` <span class="mark" aria-hidden="true">⚑</span>` : ""}</strong><span class="due num">${inr(x.bills.reduce((a, b) => a + b.pay, 0))}</span></div>
+      <div class="rsub"><span>${x.bills.map(b => b.no).join(", ")} · ${esc(descs(x))}</span><span class="num">${fmtD(x.date)}</span></div></button>`).join("")
+      : `<p class="empty">${t("saleEmpty")}</p>`}</div>
+    <button class="fab" onclick="go({name:'salenew'})">${t("newSale")}</button>`;
+}
+function renderSaleForm() {
+  formItems = [saleBlank()]; oldItems = []; oldTouched = false;
+  formPhotos = { items: [], customer: null, sign: null };
+  app.innerHTML = `<div class="card">
+    <h2>${t("saleTitle")}</h2>
+    <label for="f_name">${t("custName")}</label>${field("f_name", `<input id="f_name" autocomplete="off" onblur="checkCaution()">`)}
+    <div id="f_caut" class="hint danger"></div>
+    <label for="f_phone">${t("mobile")}</label>${field("f_phone", `<div class="pfx"><span>+91</span><input id="f_phone" type="tel" inputmode="numeric" autocomplete="off" oninput="this.value=phone10(this.value);checkCaution()"></div>`, "phone")}
+    <label for="f_vill">${t("village")}</label>${field("f_vill", `<input id="f_vill">`)}
+    <h2 style="margin:16px 0 0">${t("newItems")}</h2>
+    <div id="f_items"></div>
+    <button type="button" class="btn" style="margin-top:10px" onclick="addItem()">${t("addItem")}</button>
+    <datalist id="silverP"><option value="58"><option value="65"><option value="70"><option value="80"><option value="92.5"></datalist>
+    <h2 style="margin:18px 0 0">${t("oldItems")}</h2>
+    <div id="f_old"></div>
+    <button type="button" class="btn" style="margin-top:10px" onclick="addOld()">${t("addOld")}</button>
+    <div id="f_oldsum"></div>
+    <div class="grid2">
+      <div><label for="f_disc">${t("discount")}</label><input id="f_disc" type="number" min="0" inputmode="numeric" oninput="salePreview()"></div>
+      <div><label for="f_mode">${t("payMode")}</label><select id="f_mode" onchange="salePreview()"><option value="cash">${t("cash")}</option><option value="upi">${t("upi")}</option></select></div>
+    </div>
+    <div class="bargain num" id="sbx"></div>
+    <div id="sp" class="hint"></div>
+    <div id="panbox" hidden><label for="f_pan">${t("panL")}</label><input id="f_pan" autocapitalize="characters" maxlength="10" style="text-transform:uppercase"></div>
+    <label class="chk" style="margin-top:12px"><input type="checkbox" id="f_split" onchange="salePreview()"> ${t("splitBills")}</label>
+    <fieldset class="itembox" id="f_privbox">${privBoxInner({})}</fieldset>
+    ${ratesStale() ? `<div class="hint warn">${t("staleRates")}</div>` : ""}
+    <div class="actions"><button class="btn primary" onclick="saveSale()">${t("saveSale")}</button><button class="btn" onclick="go({name:'list'})">${t("cancel")}</button></div>
+  </div>`;
+  renderItems(); renderOld();
+}
+function renderOld() {
+  document.getElementById("f_old").innerHTML = oldItems.length ? oldItems.map((it, i) => `<fieldset class="itembox">
+      <legend>${t("itemN", i + 1)} <button type="button" class="linkbtn" onclick="readOld();oldItems.splice(${i},1);renderOld()">${t("removeItem")}</button></legend>
+      <label for="od_desc_${i}">${t("itemReq")}</label><input id="od_desc_${i}" value="${esc(it.desc)}" oninput="oldChanged()">
+      <div class="chips">${CHIPS[lang()].map(c => `<button type="button" class="chip" onclick="document.getElementById('od_desc_${i}').value='${c}';oldChanged()">${c}</button>`).join("")}</div>
+      <div class="grid2">
+        <div><label for="od_metal_${i}">${t("metal")}</label><select id="od_metal_${i}" onchange="readOld();oldItems[${i}].purity=this.value==='silver'?65:22;renderOld()">
+          <option value="gold" ${it.metal !== "silver" ? "selected" : ""}>${t("gold")}</option><option value="silver" ${it.metal === "silver" ? "selected" : ""}>${t("silver")}</option></select></div>
+        <div><label for="od_pur_${i}">${it.metal === "silver" ? t("purityPct") : t("purity")}</label>${it.metal === "silver"
+          ? `<input id="od_pur_${i}" type="number" step="0.5" list="silverP" inputmode="decimal" value="${it.purity ?? ""}" oninput="oldChanged()">`
+          : `<select id="od_pur_${i}" onchange="oldChanged()">${[24, 22, 20, 18, 14].map(k => `<option value="${k}" ${Number(it.purity) === k ? "selected" : ""}>${k}K</option>`).join("")}</select>`}</div>
+      </div>
+      <label for="od_net_${i}">${t("weight")}</label>${field("od_net_" + i, `<input id="od_net_${i}" type="number" step="0.01" inputmode="decimal" value="${it.netWt ?? ""}" oninput="oldChanged()">`, "num")}
+      <div class="muted num" id="od_val_${i}"></div></fieldset>`).join("") : `<p class="muted" style="margin:6px 0 0">${t("noOld")}</p>`;
+  oldChanged();
+}
+function readOld() {
+  oldItems = oldItems.map((it, i) => ({ desc: document.getElementById("od_desc_" + i).value.trim(), metal: document.getElementById("od_metal_" + i).value,
+    purity: Number(document.getElementById("od_pur_" + i).value) || null, netWt: Number(document.getElementById("od_net_" + i).value) || null }));
+  return oldItems;
+}
+function addOld() { readOld(); oldItems.push({ desc: "", metal: "gold", purity: 22, netWt: null }); renderOld(); }
+function oldChanged() {
+  readOld();
+  oldItems.forEach((it, i) => { const v = oldVal(it); document.getElementById("od_val_" + i).textContent = v ? `${t("value")}: ${inr(v)}` : ""; });
+  const sum = Math.round(oldItems.reduce((a, it) => a + oldVal(it), 0)), box = document.getElementById("f_oldsum");
+  if (!oldItems.length) { box.innerHTML = ""; oldTouched = false; return salePreview(); }
+  const cur = document.getElementById("f_oldagreed");
+  const keep = cur && oldTouched ? cur.value : sum;
+  box.innerHTML = `<p class="muted num" style="margin:8px 0 0">${t("oldValue")}: ${inr(sum)}</p>
+    <label for="f_oldagreed">${t("oldAgreed")}</label><input id="f_oldagreed" type="number" min="0" inputmode="numeric" value="${keep}" oninput="oldTouched=true;salePreview()">`;
+  salePreview();
+}
+function saleState() {
+  const items = readItems(), lines = items.map(lineAmount);
+  const disc = Number(document.getElementById("f_disc").value) || 0;
+  const oldEl = document.getElementById("f_oldagreed"), oldAmt = oldItems.length && oldEl ? Math.max(0, Number(oldEl.value) || 0) : 0;
+  const split = document.getElementById("f_split").checked;
+  return { items, lines, disc, oldAmt, split, all: billMath(lines, disc, oldAmt), bills: splitBills(lines, disc, oldAmt, split) };
+}
+function salePreview() {
+  const box = document.getElementById("sbx");
+  if (!box || !document.getElementById("f_disc")) return;
+  const st = saleState(), b = st.all, S2 = S.settings;
+  st.items.forEach((it, i) => { const l = st.lines[i]; document.getElementById("it_val_" + i).textContent = l.amount ? `${t("metalVal")} ${inr(l.metal)} + ${t("makingL")} ${inr(l.making)}${l.other ? " + " + inr(l.other) : ""} = ${inr(l.amount)}` : ""; });
+  if (!b.subtotal) { box.innerHTML = ""; document.getElementById("sp").textContent = t("netHint"); return; }
+  const half = r2(b.rate / 2);
+  box.innerHTML = `<div class="big"><span>${t("marketPrice")}</span><b>${inr(b.subtotal)}</b></div>
+    ${b.disc ? `<div><span>${t("discount").replace(" (₹)", "")} · ${t("discPct", r2(b.disc / b.subtotal * 100))}</span><b>− ${inr(b.disc)}</b></div>` : ""}
+    <div><span>${t("taxable")}</span><b>${inr(b.taxable)}</b></div>
+    ${b.rate ? `<div><span>${t("cgst", half)} + ${t("sgst", half)}</span><b>${inr(b.gst)}</b></div>` : ""}
+    <div><span>${t("billTotal")}</span><b>${inr(b.total)}</b></div>
+    ${b.old ? `<div><span>${t("lessOld")}</span><b>− ${inr(b.old)}</b></div>` : ""}
+    <div class="limit"><span>${b.pay >= 0 ? t("toPay") : t("toReturn")}</span><b>${inr(Math.abs(b.pay))}</b></div>`;
+  const msgs = [], sp = document.getElementById("sp"), cash = document.getElementById("f_mode").value === "cash";
+  if (b.disc / b.subtotal * 100 > S2.maxDisc) msgs.push(t("discTooHigh", S2.maxDisc));
+  if (cash && b.pay >= 200000) msgs.push(t("cashBan"));
+  if (st.split && st.items.length > 1) msgs.push(t("oneBillNote", st.items.length));
+  sp.className = "hint" + (msgs.length && (b.disc / b.subtotal * 100 > S2.maxDisc || (cash && b.pay >= 200000)) ? " danger" : "");
+  sp.textContent = msgs.join(" ");
+  document.getElementById("panbox").hidden = b.total < 200000;
+}
+function nextBillNos(count) {
+  const d = new Date(), fy = d.getMonth() >= 3 ? d.getFullYear() : d.getFullYear() - 1, prefix = `${fy}-${String(fy + 1).slice(2)}/`;
+  const used = Object.values(S.sales).flatMap(x => x.bills.map(b => b.no)).filter(n => n.startsWith(prefix)).map(n => Number(n.split("/")[1]) || 0);
+  let next = Math.max(0, ...used) + 1;
+  return Array.from({ length: count }, () => prefix + String(next++).padStart(4, "0"));
+}
+async function saveSale() {
+  const name = f_name.value.trim(), phone = phone10(f_phone.value);
+  if (!name) return toast(t("enterName"));
+  if (phone && !phoneOk(phone)) return toast(t("phoneBad"));
+  const st = saleState();
+  const keep = st.items.map((it, i) => (it.desc || it.netWt) ? i : -1).filter(i => i >= 0);
+  if (!keep.length) return toast(t("describeItem"));
+  const bad = keep.find(i => !st.items[i].desc || !st.items[i].netWt || !st.items[i].purity);
+  if (bad !== undefined) return toast(t("itemIncomplete", bad + 1));
+  const oldBad = readOld().findIndex(it => !it.desc || !it.netWt || !it.purity);
+  if (oldBad >= 0) return toast(t("itemIncomplete", oldBad + 1));
+  const mode = f_mode.value, pan = (f_pan.value || "").toUpperCase().trim();
+  if (st.all.pay >= 200000 && mode === "cash") return toast(t("cashBan"));
+  if (st.all.total >= 200000 && !/^[A-Z]{5}\d{4}[A-Z]$/.test(pan)) return toast(t("needPan"));
+  const items = keep.map(i => ({ ...st.items[i], ...st.lines[i] })), lines = keep.map(i => st.lines[i]);
+  const bills = splitBills(lines, st.disc, st.oldAmt, st.split), nos = nextBillNos(bills.length);
+  bills.forEach((b, i) => { b.no = nos[i]; });
+  const x = {
+    kind: "sale", id: "s-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6), date: todayISO(), createdAt: new Date().toISOString(),
+    customer: { name, phone, village: f_vill.value.trim(), pan: st.all.total >= 200000 ? pan : "" },
+    items, old: oldItems.map(it => ({ ...it, value: Math.round(oldVal(it)) })), oldAgreed: st.oldAmt, discount: st.disc, mode, bills,
+    gst: { mode: S.settings.gstMode, rate: S.settings.gstRate, on: S.settings.gstOn, gstin: S.settings.gstin },
+    rates: { gold24: S.settings.gold24, silver: S.settings.silver },
+    caution: document.getElementById("f_caution") ? document.getElementById("f_caution").checked : false,
+  };
+  const privEl = document.getElementById("f_private");
+  if (privEl && dataKey && privEl.value.trim()) x.private = await encryptNote(privEl.value.trim());
+  S.sales[x.id] = x; saveLocal();
+  toast(t("saleSaved", bills.map(b => b.no).join(", ")));
+  go({ name: "saledetail", id: x.id });
+}
+function billTitle(x) { return x.gst.mode === "regular" ? t("taxInvoice") : x.gst.mode === "composition" ? t("billOfSupply") : t("estimate"); }
+function renderSaleDetail(x) {
+  app.innerHTML = `
+    <div class="card">
+      <div class="muted">${fmtD(x.date)} · ${x.mode === "cash" ? t("cash") : t("upi")}</div>
+      <h2 style="font-size:22px;margin:4px 0 2px">${esc(x.customer.name)}</h2>
+      <div class="muted">${esc(x.customer.village || "")} ${x.customer.phone ? "· " + esc(showPhone(x.customer.phone)) : ""}</div>
+      <p class="bigdue num" style="margin:12px 0 0">${inr(x.bills.reduce((a, b) => a + b.pay, 0))}</p>
+      <div class="muted">${t("toPay")}</div>
+    </div>
+    <div class="card"><h2>${t("bills")}</h2>
+      ${x.bills.map((b, i) => `<div class="billrow"><div><b>${b.no}</b><div class="muted">${esc(b.idx.map(j => x.items[j].desc).join(", "))}</div></div>
+        <div class="r"><b class="num">${inr(b.pay)}</b><div class="actions" style="margin:4px 0 0;justify-content:flex-end">
+          <button class="btn" onclick="go({name:'bill',id:'${x.id}',bill:${i}})">${t("viewBill")}</button>
+          ${x.customer.phone ? `<a class="btn wa" target="_blank" rel="noopener" href="${waLink(x.customer.phone, saleText(x, i))}">WhatsApp</a>` : ""}</div></div></div>`).join("")}
+    </div>
+    ${x.caution || x.private ? `<div class="card"><h2>🔒 ${t("privateCard")}${x.caution ? ` <span class="mark">⚑</span>` : ""}</h2><div id="privtxt" hidden></div>
+      <button class="btn" style="margin-top:6px" onclick="revealPrivate('${x.id}',this)">${t("showPrivate")}</button></div>` : ""}
+    <div class="actions"><button class="btn danger" onclick="deleteSale('${x.id}')">${t("del")}</button></div>`;
+}
+function saleText(x, i) {
+  const b = x.bills[i], L = S.settings.receiptLang, en = L === "en";
+  const lines = b.idx.map(j => { const it = x.items[j]; return `• ${it.desc} — ${metalLabel(it, L)}, ${it.netWt} ${en ? "g" : "ग्राम"}: ${inr(it.amount)}`; }).join("\n");
+  return [S.settings.shopName, `${billTitle(x)} ${en ? "no." : "नं."} ${b.no}`, `${en ? "Date" : "तारीख"}: ${fmtD(x.date, L)}`, `${en ? "Customer" : "ग्राहक"}: ${x.customer.name}`, lines,
+    `${en ? "Market price" : "बाज़ार मूल्य"}: ${inr(b.subtotal)}`, b.disc ? `${en ? "Discount" : "छूट"}: −${inr(b.disc)}` : "",
+    b.gst ? `GST ${b.rate}%: ${inr(b.gst)}` : "", `${en ? "Bill total" : "बिल का कुल"}: ${inr(b.total)}`, b.old ? `${en ? "Less old items" : "घटाएँ पुराना सामान"}: −${inr(b.old)}` : "",
+    `${en ? "Paid" : "भुगतान"}: ${inr(b.pay)}`, en ? "Thank you." : "धन्यवाद।"].filter(Boolean).join("\n");
+}
+function renderBill(x, i) {
+  const b = x.bills[i], st = S.settings, half = r2(b.rate / 2), en = lang() === "en";
+  app.innerHTML = `<div class="actions noprint" style="margin:0 0 12px"><button class="btn primary" onclick="extAct();window.print()">${t("printBill")}</button>
+      <button class="btn" onclick="go({name:'saledetail',id:'${x.id}'})">${t("back")}</button></div>
+    <article class="invoice num">
+      <div class="ih"><div><h2>${esc(st.shopName)}</h2>${st.shopAddress ? `<div>${esc(st.shopAddress)}</div>` : ""}${x.gst.gstin ? `<div>${t("gstinL")}: ${esc(x.gst.gstin)}</div>` : ""}</div>
+        <div class="r"><b>${billTitle(x)}</b><div>${b.no}</div><div>${fmtD(x.date)}</div></div></div>
+      <p>${t("custL")}: <b>${esc(x.customer.name)}</b>${x.customer.phone ? " · " + esc(showPhone(x.customer.phone)) : ""}${x.customer.village ? " · " + esc(x.customer.village) : ""}${x.customer.pan ? ` · PAN ${esc(x.customer.pan)}` : ""}</p>
+      <div class="tw"><table><thead><tr><th>${t("desc")}</th><th>${t("hsn")}</th><th>${t("purity")}</th><th class="r">g</th><th class="r">${t("rateUsed")}/g</th><th class="r">${t("metalVal")}</th><th class="r">${t("makingL")}</th><th class="r">${t("amountL")}</th></tr></thead><tbody>
+        ${b.idx.map(j => { const it = x.items[j]; return `<tr><td>${esc(it.desc)}</td><td>7113</td><td>${metalLabel(it, lang())}</td><td class="r">${it.netWt}</td><td class="r">${inr(it.ratePerG)}</td><td class="r">${inr(it.metal)}</td><td class="r">${inr(it.making + (it.other || 0))}</td><td class="r">${inr(it.amount)}</td></tr>`; }).join("")}
+      </tbody></table></div>
+      <dl class="kv" style="margin-top:10px">
+        <dt>${t("marketPrice")}</dt><dd>${inr(b.subtotal)}</dd>
+        ${b.disc ? `<dt>${t("discount").replace(" (₹)", "")}</dt><dd>− ${inr(b.disc)}</dd>` : ""}
+        <dt>${t("taxable")}</dt><dd>${inr(b.taxable)}</dd>
+        ${b.rate ? `<dt>${t("cgst", half)}</dt><dd>${inr(b.gst / 2)}</dd><dt>${t("sgst", half)}</dt><dd>${inr(b.gst / 2)}</dd>` : ""}
+        <dt><b>${t("billTotal")}</b></dt><dd><b>${inr(b.total)}</b></dd>
+        ${b.old ? `<dt>${t("lessOld")}</dt><dd>− ${inr(b.old)}</dd>` : ""}
+        ${b.round ? `<dt>${t("roundOff")}</dt><dd>${b.round > 0 ? "+" : "−"} ₹${Math.abs(b.round).toFixed(2)}</dd>` : ""}
+        <dt><b>${b.pay >= 0 ? t("toPay") : t("toReturn")}</b></dt><dd><b>${inr(Math.abs(b.pay))}</b> · ${x.mode === "cash" ? t("cash") : t("upi")}</dd>
+      </dl>
+      ${b.old && x.old.length ? `<p class="muted" style="margin:10px 0 0">${t("oldItems")}: ${x.old.map(o => `${esc(o.desc)} (${metalLabel(o, lang())}, ${o.netWt} g)`).join(", ")}</p>` : ""}
+      <div class="if"><span>${t("thanks")}</span><span class="sigline">${t("signatory")}</span></div>
+    </article>`;
+}
+function deleteSale(id) {
+  const x = S.sales[id];
+  if (!confirm(t("delSaleConfirm", x.bills.map(b => b.no).join(", ")))) return;
+  delete S.sales[id]; saveLocal(); toast(t("deleted")); go({ name: "list" });
+}
+
+function renderSettings() {
+  const st = S.settings;
+  const opt = (v, cur, label) => `<option value="${v}" ${cur === v ? "selected" : ""}>${label}</option>`;
+  app.innerHTML = `<div class="card">
+    <h2>${t("language")}</h2>
+    <div class="grid2">
+      <div><label for="s_lang">${t("appLang")}</label><select id="s_lang">${opt("hi", lang(), "हिंदी")}${opt("en", lang(), "English")}</select></div>
+      <div><label for="s_rl">${t("receiptLang")}</label><select id="s_rl">${opt("hi", st.receiptLang, "हिंदी")}${opt("en", st.receiptLang, "English")}</select></div>
+    </div>
+    <h2 style="margin-top:16px">${t("shop")}</h2>
+    <label for="s_shop">${t("shopName")}</label><input id="s_shop" value="${esc(st.shopName)}">
+    <h2 style="margin-top:16px">${t("rates")}</h2>
+    <p class="muted" style="margin:0">${t("ratesNote")}</p><p class="muted num" style="margin:4px 0 0">${t("rateStrip", inr(st.gold24 * 10), inr(st.silver * 1000), fmtD(st.ratesDate || todayISO()))}</p>
+    <div class="grid2">
+      <div><label for="s_g">${t("gold24")}</label><input id="s_g" type="number" inputmode="numeric" value="${Math.round(st.gold24 * 10)}"></div>
+      <div><label for="s_s">${t("silverRate")}</label><input id="s_s" type="number" inputmode="numeric" value="${Math.round(st.silver * 1000)}"></div>
+    </div>
+    <h2 style="margin-top:16px">${t("defaults")}</h2>
+    <div class="grid2">
+      <div><label for="s_r">${t("ratePM").replace(" *", "")}</label><input id="s_r" type="number" step="0.25" value="${st.rate}"></div>
+      <div><label for="s_o">${t("flagAfter")}</label><input id="s_o" type="number" min="1" value="${st.overdueMonths}"></div>
+    </div>
+    <label for="s_m">${t("counting")}</label><select id="s_m">${Object.entries(methods()).map(([k, v]) => opt(k, st.method, v)).join("")}</select>
+    <h2 style="margin-top:16px">${t("gstSection")}</h2>
+    <label for="s_gm">${t("gstMode")}</label><select id="s_gm">${opt("regular", st.gstMode, t("gstRegular"))}${opt("composition", st.gstMode, t("gstComposition"))}${opt("none", st.gstMode, t("gstNone"))}</select>
+    <div class="grid2">
+      <div><label for="s_gr">${t("gstRateL")}</label><input id="s_gr" type="number" step="0.25" min="0" value="${st.gstRate}"></div>
+      <div><label for="s_go">${t("gstOnL")}</label><select id="s_go">${opt("full", st.gstOn, t("gstOnFull"))}${opt("net", st.gstOn, t("gstOnNet"))}</select></div>
+    </div>
+    <label for="s_gstin">${t("gstinInput")}</label><input id="s_gstin" autocapitalize="characters" maxlength="15" style="text-transform:uppercase" value="${esc(st.gstin)}">
+    <label for="s_addr">${t("addressL")}</label><input id="s_addr" value="${esc(st.shopAddress)}">
+    <div class="grid2">
+      <div><label for="s_mkg">${t("makingGL")}</label><input id="s_mkg" type="number" step="0.5" min="0" value="${st.makingG}"></div>
+      <div><label for="s_mks">${t("makingSL")}</label><input id="s_mks" type="number" step="0.5" min="0" value="${st.makingS}"></div>
+      <div><label for="s_exg">${t("exchGL")}</label><input id="s_exg" type="number" step="0.5" min="0" value="${st.exchDedG}"></div>
+      <div><label for="s_exs">${t("exchSL")}</label><input id="s_exs" type="number" step="0.5" min="0" value="${st.exchDedS}"></div>
+      <div><label for="s_md">${t("maxDiscL")}</label><input id="s_md" type="number" step="0.5" min="0" value="${st.maxDisc}"></div>
+    </div>
+    <h2 style="margin-top:16px">${t("buyMargins")}</h2>
+    <div class="grid2">
+      <div><label for="s_og">${t("offerG")}</label><input id="s_og" type="number" step="0.5" min="0" value="${st.buyOfferG}"></div>
+      <div><label for="s_mg">${t("minG")}</label><input id="s_mg" type="number" step="0.5" min="0" value="${st.buyMinG}"></div>
+      <div><label for="s_os">${t("offerS")}</label><input id="s_os" type="number" step="0.5" min="0" value="${st.buyOfferS}"></div>
+      <div><label for="s_ms">${t("minS")}</label><input id="s_ms" type="number" step="0.5" min="0" value="${st.buyMinS}"></div>
+    </div>
+    <div class="actions"><button class="btn primary" onclick="saveSettings()">${t("saveSettings")}</button></div>
+  </div>
+  <div class="card">
+    <h2>${t("security")}</h2>
+    ${S.settings.lock ? `<label for="s_al">${t("autoLock")}</label><select id="s_al" onchange="S.settings={...S.settings,autoLock:Number(this.value)};persistSettings()">
+      ${[[0, t("immediately")], [1, t("mins", 1)], [5, t("mins", 5)], [15, t("mins", 15)]].map(([v, l]) => `<option value="${v}" ${S.settings.autoLock === v ? "selected" : ""}>${l}</option>`).join("")}</select>
+      <div class="actions"><button class="btn" onclick="startChangePin()">${t("changePin")}</button><button class="btn" onclick="lockNow()">🔒 ${t("lockNow")}</button></div>`
+      : `<p class="muted" style="margin:0 0 8px">${t("setPinCard")}</p><button class="btn primary" onclick="startSetPin()">${t("setPinBtn")}</button>`}
+  </div>
+  <div class="card">
+    <h2>${t("backup")}</h2>
+    <p class="muted" style="margin:0 0 8px">${t("backupNote")}</p>
+    <div class="actions">
+      <button class="btn" onclick="exportData()">${t("export")}</button>
+      <label class="btn" style="margin:0;color:var(--ink)">${t("restore")}<input type="file" accept="application/json,.json" hidden onchange="importData(this.files[0])"></label>
+    </div>
+  </div>`;
+}
+const num = (v, d) => (v === "" || isNaN(Number(v)) ? d : Math.max(0, Math.min(60, Number(v))));
+function saveSettings() {
+  const g = Number(s_g.value) / 10 || S.settings.gold24, sv = Number(s_s.value) / 1000 || S.settings.silver;
+  const changed = Math.round(g * 10) !== Math.round(S.settings.gold24 * 10) || Math.round(sv * 1000) !== Math.round(S.settings.silver * 1000);
+  S.settings = { ...S.settings,
+    lang: s_lang.value, receiptLang: s_rl.value, shopName: s_shop.value.trim() || DEFAULT_SETTINGS.shopName,
+    gold24: g, silver: sv, ratesDate: changed ? todayISO() : (S.settings.ratesDate || todayISO()),
+    rate: Number(s_r.value) || S.settings.rate, overdueMonths: Number(s_o.value) || 6, method: s_m.value,
+    buyOfferG: num(s_og.value, 8), buyMinG: num(s_mg.value, 4), buyOfferS: num(s_os.value, 15), buyMinS: num(s_ms.value, 8),
+    gstMode: s_gm.value, gstRate: num(s_gr.value, 3), gstOn: s_go.value, gstin: s_gstin.value.trim().toUpperCase(), shopAddress: s_addr.value.trim(),
+    makingG: num(s_mkg.value, 12), makingS: num(s_mks.value, 10), exchDedG: num(s_exg.value, 2), exchDedS: num(s_exs.value, 5), maxDisc: num(s_md.value, 5),
+  };
+  // The limit can never be a better deal for the customer than the opening offer
+  if (S.settings.buyMinG > S.settings.buyOfferG) S.settings.buyMinG = S.settings.buyOfferG;
+  if (S.settings.buyMinS > S.settings.buyOfferS) S.settings.buyMinS = S.settings.buyOfferS;
+  persistSettings(); toast(t("settingsSaved")); go({ name: "list" });
+}
+async function exportData() {
+  await writeVault();
+  const photos = {};
+  for (const k of await IDB.keys()) if (String(k).startsWith("ph:")) photos[k] = await IDB.get(k);
+  const payload = { app: "girvi-bahi", version: 2, enc: true, exportedAt: new Date().toISOString(), lock: S.settings.lock, vault: await IDB.get("vault"), photos };
+  const file = new File([JSON.stringify(payload)], `girvi-backup-${todayISO()}.json`, { type: "application/json" });
+  const done = () => { S.settings = { ...S.settings, lastBackup: todayISO() }; saveLocal(); toast(t("backupSaved")); if (S.view.name === "list") render(); };
+  extAct();
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try { await navigator.share({ files: [file], title: t("appName") }); return done(); }
+    catch (e) { if (e.name === "AbortError") return; }
+  }
+  const a = document.createElement("a"); a.href = URL.createObjectURL(file); a.download = file.name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 10000); done();
+}
+let pendingRestore = null;
+async function importData(file) {
+  if (!file) return;
+  let d;
+  try { d = JSON.parse(await file.text()); if (d.app !== "girvi-bahi" || !d.enc || !d.lock || !d.vault) throw new Error(); }
+  catch (e) { return toast(t("badFile")); }
+  if (dataKey && Object.keys(S.pledges).length && !confirm(t("replaceAll"))) return;
+  pendingRestore = d; PF = { mode: "restore", buf: "" }; drawPad();
+}
+function cancelRestore() { pendingRestore = null; endFlow(); }
+async function restoreWithCode() {
+  try { await finishRestore(await unwrapAny(document.getElementById("rc").value, pendingRestore.lock)); }
+  catch (e) { PF.msg = t("badRecovery"); drawPad(); }
+}
+async function finishRestore(raw) {
+  const d = pendingRestore;
+  dataKey = await importDK(raw);
+  for (const k of await IDB.keys()) if (String(k).startsWith("ph:")) await IDB.del(k);
+  for (const [k, v] of Object.entries(d.photos || {})) await IDB.set(k, v);
+  await IDB.set("vault", d.vault);
+  S.settings = { ...S.settings, lock: d.lock };
+  await IDB.set("meta", { lang: S.settings.lang, lock: d.lock });
+  await openVault();
+  pendingRestore = null; PF = null; drawPad();
+  S.view = { name: "list", tab: "active", q: "" }; render(); toast(t("restored"));
+}
+
+setInterval(() => { if (S.view.name === "list" && document.visibilityState === "visible") renderList(); }, 60 * 60 * 1000);
+
+(async () => {
+  await loadLocal();
+  render();
+  liveRates();
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) navigator.serviceWorker.register("sw.js").catch(() => {});
+})();
+</script>
+</body>
+</html>

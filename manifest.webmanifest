@@ -1,0 +1,16 @@
+{
+  "name": "गिरवी बही — Girvi Bahi",
+  "short_name": "गिरवी बही",
+  "description": "Girvi (gold and silver pledge) register for the shop. Works offline, locked with a PIN.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FBFAF7",
+  "theme_color": "#9E1B22",
+  "lang": "hi",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
